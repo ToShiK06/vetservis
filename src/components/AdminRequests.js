@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { db, requestsCollection, getDocs, deleteDoc, doc } from '../firebase';
+import { db, appointmentsCollection, getDocs, deleteDoc, doc, query, where } from '../firebase';
 
 function AdminRequests() {
-  const [requests, setRequests] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    loadRequests();
+    loadAppointments();
   }, []);
 
-  const loadRequests = async () => {
+  const loadAppointments = async () => {
     try {
-      const snapshot = await getDocs(requestsCollection);
-      const requestsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      requestsData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setRequests(requestsData);
+      let q = appointmentsCollection;
+      if (filter !== 'all') {
+        q = query(appointmentsCollection, where('status', '==', filter));
+      }
+      const snapshot = await getDocs(q);
+      const appointmentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      appointmentsData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setAppointments(appointmentsData);
     } catch (error) {
       console.error('Ошибка загрузки:', error);
     } finally {
@@ -22,56 +27,81 @@ function AdminRequests() {
     }
   };
 
-  const handleDelete = async (requestId) => {
-    if (window.confirm('Удалить заявку?')) {
-      await deleteDoc(doc(db, 'requests', requestId));
-      await loadRequests();
+  const handleDelete = async (appointmentId) => {
+    if (window.confirm('Удалить запись?')) {
+      await deleteDoc(doc(db, 'appointments', appointmentId));
+      await loadAppointments();
     }
   };
 
+  useEffect(() => {
+    loadAppointments();
+  }, [filter]);
+
   const getStatusBadge = (status) => {
     switch(status) {
-      case 'new':
-        return <span className="statusBadge new">Новая</span>;
-      case 'processed':
-        return <span className="statusBadge processed">Обработана</span>;
+      case 'confirmed':
+        return <span className="statusBadge confirmed">Подтверждено</span>;
+      case 'pending':
+        return <span className="statusBadge pending">Ожидает</span>;
+      case 'completed':
+        return <span className="statusBadge completed">Выполнено</span>;
+      case 'cancelled':
+        return <span className="statusBadge cancelled">Отменено</span>;
       default:
-        return <span className="statusBadge new">Новая</span>;
+        return <span className="statusBadge pending">Новая</span>;
     }
   };
 
   if (loading) {
-    return <div className="adminLoading">Загрузка заявок...</div>;
+    return <div className="adminLoading">Загрузка записей...</div>;
   }
 
   return (
     <div className="adminRequestsSection">
-      <h2 className="sectionTitle">Заявки от клиентов</h2>
-      {requests.length === 0 ? (
-        <div className="noRequests">Нет заявок</div>
+      <div className="requestsHeader">
+        <h2 className="sectionTitle">Записи на прием</h2>
+        <div className="filterButtons">
+          <button className={`filterBtn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
+            Все
+          </button>
+          <button className={`filterBtn ${filter === 'confirmed' ? 'active' : ''}`} onClick={() => setFilter('confirmed')}>
+            Подтвержденные
+          </button>
+          <button className={`filterBtn ${filter === 'pending' ? 'active' : ''}`} onClick={() => setFilter('pending')}>
+            Ожидают
+          </button>
+          <button className={`filterBtn ${filter === 'completed' ? 'active' : ''}`} onClick={() => setFilter('completed')}>
+            Выполненные
+          </button>
+        </div>
+      </div>
+      
+      {appointments.length === 0 ? (
+        <div className="noRequests">Нет записей на прием</div>
       ) : (
         <div className="requestsList">
-          {requests.map(request => (
-            <div key={request.id} className="requestCard">
+          {appointments.map(appointment => (
+            <div key={appointment.id} className="requestCard">
               <div className="requestHeader">
                 <div className="requestClient">
-                  <strong>{request.clientName}</strong>
-                  <span className="requestPhone">{request.clientPhone}</span>
+                  <strong>{appointment.clientName}</strong>
+                  <span className="requestPhone">{appointment.clientPhone}</span>
                 </div>
-                {getStatusBadge(request.status)}
+                {getStatusBadge(appointment.status)}
               </div>
               
               <div className="requestDetails">
-                <p><strong>Услуга:</strong> {request.serviceType}</p>
-                {request.petName && <p><strong>Питомец:</strong> {request.petName} ({request.petType || 'не указан'})</p>}
-                {request.preferredDate && <p><strong>Желаемая дата:</strong> {request.preferredDate}</p>}
-                {request.preferredTime && <p><strong>Желаемое время:</strong> {request.preferredTime}</p>}
-                {request.message && <p><strong>Сообщение:</strong> {request.message}</p>}
-                <p className="requestDate"><strong>Дата заявки:</strong> {new Date(request.createdAt).toLocaleString('ru-RU')}</p>
+                <p><strong>Услуга:</strong> {appointment.serviceType}</p>
+                <p><strong>Дата:</strong> {appointment.bookingDate}</p>
+                <p><strong>Время:</strong> {appointment.bookingTime}</p>
+                {appointment.petName && <p><strong>Питомец:</strong> {appointment.petName} ({appointment.petType || 'не указан'})</p>}
+                {appointment.message && <p><strong>Сообщение:</strong> {appointment.message}</p>}
+                <p className="requestDate"><strong>Дата заявки:</strong> {new Date(appointment.createdAt).toLocaleString('ru-RU')}</p>
               </div>
               
               <div className="requestActions">
-                <button onClick={() => handleDelete(request.id)} className="deleteRequestButton">
+                <button onClick={() => handleDelete(appointment.id)} className="deleteRequestButton">
                   Удалить
                 </button>
               </div>

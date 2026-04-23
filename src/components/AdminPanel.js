@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PetPassportForm from './PetPassportForm';
 import PetCard from './PetCard';
 import AdminRequests from './AdminRequests';
+import AdminServices from './AdminServices';
 import { db, petsCollection, getDocs, deleteDoc, doc } from '../firebase';
 import { auth } from '../firebase';
 
@@ -55,14 +56,20 @@ function AdminPanel({ setAdmin }) {
           Паспорта питомцев
         </button>
         <button 
+          className={`tabButton ${activeTab === 'services' ? 'active' : ''}`}
+          onClick={() => setActiveTab('services')}
+        >
+          Услуги
+        </button>
+        <button 
           className={`tabButton ${activeTab === 'requests' ? 'active' : ''}`}
           onClick={() => setActiveTab('requests')}
         >
-          Заявки клиентов
+          Записи клиентов
         </button>
       </div>
 
-      {activeTab === 'pets' ? (
+      {activeTab === 'pets' && (
         <>
           <div className="formSection">
             <h2 className="sectionTitle">Создать паспорт питомца</h2>
@@ -82,9 +89,10 @@ function AdminPanel({ setAdmin }) {
             )}
           </div>
         </>
-      ) : (
-        <AdminRequests />
       )}
+
+      {activeTab === 'services' && <AdminServices />}
+      {activeTab === 'requests' && <AdminRequests />}
     </div>
   );
 }

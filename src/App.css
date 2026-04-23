@@ -1401,3 +1401,464 @@ select.inputField:hover {
   padding: 40px;
   color: #638ECB;
 }
+
+/* Booking Form Styles */
+.bookingFormSection {
+  padding: 60px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.bookingFormContainer {
+  background-color: white;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(10, 25, 49, 0.1);
+}
+
+.bookingFormHeader {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.bookingFormTitle {
+  color: #0A1931;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.bookingFormSubtitle {
+  color: #1A3D63;
+  font-size: 16px;
+}
+
+.bookingForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.noSlotsMessage {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.submitBookingButton {
+  background-color: #1A3D63;
+  color: white;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.submitBookingButton:hover {
+  background-color: #0A1931;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(10, 25, 49, 0.3);
+}
+
+.submitBookingButton:disabled {
+  background-color: #B3CFE5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Filter Buttons */
+.requestsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  padding: 8px 16px;
+  background-color: #F6FAFD;
+  border: 1px solid #B3CFE5;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1A3D63;
+  transition: all 0.3s;
+}
+
+.filterBtn:hover {
+  background-color: #4A7FA7;
+  color: white;
+  border-color: #4A7FA7;
+}
+
+.filterBtn.active {
+  background-color: #1A3D63;
+  color: white;
+  border-color: #1A3D63;
+}
+
+/* Status Badges */
+.statusBadge.confirmed {
+  background-color: #28a745;
+  color: white;
+}
+
+.statusBadge.pending {
+  background-color: #ffc107;
+  color: #0A1931;
+}
+
+.statusBadge.completed {
+  background-color: #4A7FA7;
+  color: white;
+}
+
+.statusBadge.cancelled {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Admin Services */
+.adminServicesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.serviceFormSection {
+  background-color: #F6FAFD;
+  padding: 25px;
+  border-radius: 20px;
+}
+
+.serviceForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.iconPreview {
+  font-size: 32px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 12px;
+  text-align: center;
+  width: 60px;
+  border: 2px solid #B3CFE5;
+}
+
+.formButtons {
+  display: flex;
+  gap: 15px;
+}
+
+.cancelButton {
+  background-color: #dc3545;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cancelButton:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+.servicesTable {
+  overflow-x: auto;
+}
+
+.servicesTable table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #F6FAFD;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.servicesTable th,
+.servicesTable td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #B3CFE5;
+}
+
+.servicesTable th {
+  background-color: #1A3D63;
+  color: white;
+  font-weight: 600;
+}
+
+.serviceIconCell {
+  font-size: 28px;
+  text-align: center;
+}
+
+.servicePriceCell {
+  font-weight: 700;
+  color: #4A7FA7;
+}
+
+.serviceActionsCell {
+  display: flex;
+  gap: 10px;
+}
+
+.editServiceBtn,
+.deleteServiceBtn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.editServiceBtn {
+  background-color: #4A7FA7;
+  color: white;
+}
+
+.editServiceBtn:hover {
+  background-color: #1A3D63;
+}
+
+.deleteServiceBtn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.deleteServiceBtn:hover {
+  background-color: #c82333;
+}
+
+.noServices {
+  text-align: center;
+  padding: 40px;
+  color: #B3CFE5;
+  font-size: 16px;
+  background-color: #F6FAFD;
+  border-radius: 16px;
+}
+
+/* Services Filter */
+.servicesFilter {
+  max-width: 1200px;
+  margin: 30px auto 0;
+  padding: 0 20px;
+}
+
+.filterContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.filterChip {
+  padding: 8px 20px;
+  background-color: white;
+  border: 2px solid #B3CFE5;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1A3D63;
+  transition: all 0.3s;
+}
+
+.filterChip:hover {
+  background-color: #4A7FA7;
+  color: white;
+  border-color: #4A7FA7;
+}
+
+.filterChip.active {
+  background-color: #1A3D63;
+  color: white;
+  border-color: #1A3D63;
+}
+
+.serviceDuration {
+  color: #4A7FA7;
+  font-size: 13px;
+  margin: 5px 0;
+}
+
+.bookServiceBtn {
+  width: 100%;
+  padding: 12px;
+  background-color: #1A3D63;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 15px;
+}
+
+.bookServiceBtn:hover {
+  background-color: #0A1931;
+  transform: translateY(-2px);
+}
+
+.loadingServices,
+.noServicesMessage {
+  text-align: center;
+  padding: 60px;
+  color: #B3CFE5;
+  font-size: 18px;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(10, 25, 49, 0.8);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 24px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 2px solid #B3CFE5;
+}
+
+.modalHeader h2 {
+  color: #0A1931;
+  font-size: 24px;
+}
+
+.modalCloseBtn {
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: #B3CFE5;
+  transition: all 0.3s;
+}
+
+.modalCloseBtn:hover {
+  color: #dc3545;
+  transform: scale(1.1);
+}
+
+.modalServiceInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 25px;
+  background-color: #F6FAFD;
+  margin: 0 25px 20px;
+  border-radius: 16px;
+}
+
+.modalServiceIcon {
+  font-size: 40px;
+}
+
+.modalServicePrice {
+  color: #4A7FA7;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+.modalForm {
+  padding: 0 25px 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalForm .formGroup label {
+  color: #0A1931;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.modalForm .formGroup input,
+.modalForm .formGroup select,
+.modalForm .formGroup textarea {
+  padding: 12px;
+  border: 2px solid #B3CFE5;
+  border-radius: 12px;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.modalForm .formGroup input:focus,
+.modalForm .formGroup select:focus,
+.modalForm .formGroup textarea:focus {
+  outline: none;
+  border-color: #4A7FA7;
+}
+
+.submitModalBtn {
+  background-color: #1A3D63;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.submitModalBtn:hover {
+  background-color: #0A1931;
+  transform: translateY(-2px);
+}

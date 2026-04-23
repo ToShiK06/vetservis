@@ -1,5 +1,5 @@
 import React from 'react';
-import RequestForm from '../components/RequestForm';
+import BookingForm from '../components/BookingForm';
 
 function Contacts() {
   return (
@@ -33,12 +33,6 @@ function Contacts() {
             <p>Понедельник - Суббота: 9:00 - 21:00</p>
             <p>Воскресенье: 10:00 - 18:00</p>
           </div>
-          
-          <div className="contactItem">
-            <strong> Рейтинг:</strong>
-            <p>5.0 на основе отзывов</p>
-            <p>91 подписчик · 6 друзей</p>
-          </div>
         </div>
 
         <div className="contactMap">
@@ -51,7 +45,7 @@ function Contacts() {
         </div>
       </div>
       
-      <RequestForm />
+      <BookingForm />
     </div>
   );
 }

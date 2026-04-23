@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, getDoc, updateDoc } from 'firebase/firestore';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -17,5 +17,7 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const petsCollection = collection(db, 'pets');
 export const requestsCollection = collection(db, 'requests');
+export const appointmentsCollection = collection(db, 'appointments');
+export const servicesCollection = collection(db, 'services');
 
-export { addDoc, getDocs, deleteDoc, doc, signInWithEmailAndPassword };
+export { addDoc, getDocs, deleteDoc, doc, signInWithEmailAndPassword, query, where, getDoc, updateDoc };
