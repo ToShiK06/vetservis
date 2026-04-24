@@ -32,89 +32,119 @@ function Home() {
   const slides = [
     {
       id: 1,
-      badge: 'ВетСервис',
-      title: 'Ветеринарный кабинет',
-      address: 'г. Старая Русса, мкр Городок 10а',
-      phone: '89116010139',
-      rating: '5.0',
-      subscribers: '91 подписчик',
-      friends: '6 друзей',
-      promoTitle: 'Выгодный чекап для щенков и котят',
-      promoText: 'Комплексное обследование щенков (6 800 ₽) и котят (5 700 ₽) с консультациями терапевта, зоопсихолога, ортопеда',
-      image: 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=1600&h=800&fit=crop'
+      title: 'ВетСервис',
+      subtitle: 'Профессиональная ветеринарная помощь',
+      description: 'Современная клиника с высокоточным оборудованием и опытными специалистами. Забота о здоровье ваших питомцев - наша главная задача 24/7.',
+      stats: [
+        { value: '10+', label: 'лет опыта' },
+        { value: '5000+', label: 'счастливых питомцев' },
+        { value: '24/7', label: 'круглосуточно' }
+      ],
+      buttonText: 'Записаться на прием',
+      buttonLink: '/contacts',
+      image: 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=1600&h=900&fit=crop'
     },
     {
       id: 2,
-      badge: 'Все адреса',
-      title: 'Микрорайон Городок, 10А',
-      address: 'мкр. Городок, 10а',
-      workingHours: 'Нет информации о времени работы',
-      promoTitle: 'OpenStreetMap contributors',
-      promoText: '14 км до центра',
-      image: 'https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?w=1600&h=800&fit=crop'
+      title: 'Вакцинация',
+      subtitle: 'Надежная защита для вашего питомца',
+      description: 'Современные вакцины европейского качества. Индивидуальный график прививок. Защитите своего любимца от опасных заболеваний.',
+      stats: [
+        { value: '100%', label: 'гарантия качества' },
+        { value: 'от 800 ₽', label: 'доступные цены' },
+        { value: '1 год', label: 'защита' }
+      ],
+      buttonText: 'Узнать о вакцинации',
+      buttonLink: '/services',
+      image: 'https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?w=1600&h=900&fit=crop'
+    },
+    {
+      id: 3,
+      title: 'Хирургия',
+      subtitle: 'Опытные хирурги-ветеринары',
+      description: 'Операции любой сложности. Современная анестезия. Реабилитация под круглосуточным наблюдением. Безопасность превыше всего.',
+      stats: [
+        { value: '98%', label: 'успешных операций' },
+        { value: 'современно', label: 'оборудование' },
+        { value: 'безопасно', label: 'для питомца' }
+      ],
+      buttonText: 'Записаться на консультацию',
+      buttonLink: '/services',
+      image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=1600&h=900&fit=crop'
+    },
+    {
+      id: 4,
+      title: 'УЗИ диагностика',
+      subtitle: 'Точная диагностика здоровья',
+      description: 'Ультразвуковое исследование всех органов. Расшифровка сразу после осмотра. Безболезненно и информативно для питомцев любого возраста.',
+      stats: [
+        { value: '100%', label: 'безболезненно' },
+        { value: 'за 30 мин', label: 'быстрый результат' },
+        { value: 'точно', label: 'диагностика' }
+      ],
+      buttonText: 'Записаться на УЗИ',
+      buttonLink: '/contacts',
+      image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&h=900&fit=crop'
     }
   ];
 
   return (
     <div className="homePage">
-      <div className="sliderSection">
+      <div className="premiumSliderSection">
         <Swiper
           modules={[Autoplay, Pagination, Navigation]}
           spaceBetween={0}
           slidesPerView={1}
           autoplay={{ delay: 6000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-          pagination={{ clickable: true, el: '.slider-pagination', type: 'bullets' }}
-          navigation={{ nextEl: '.slider-next', prevEl: '.slider-prev' }}
+          pagination={{ clickable: true }}
+          navigation={true}
           loop={true}
           speed={800}
-          className="fullSlider"
+          className="premiumSwiper"
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>
-              <div className="slideWrapper">
-                <div className="slideBackground" style={{ backgroundImage: `url(${slide.image})` }}>
-                  <div className="slideOverlay"></div>
-                </div>
-                <div className="slideContent">
-                  <div className="slideContainer">
-                    <div className="slideBadge">{slide.badge}</div>
-                    <h2 className="slideMainTitle">{slide.title}</h2>
-                    
-                    {slide.address && (
-                      <div className="slideAddress">{slide.address}</div>
-                    )}
-                    
-                    {slide.phone && (
-                      <div className="slidePhone">{slide.phone}</div>
-                    )}
-                    
-                    {slide.rating && (
-                      <div className="slideRating">
-                        <span className="stars">★★★★★</span>
-                        <span className="ratingValue">{slide.rating}</span>
-                        <span className="reviewLink"> · Написать отзыв</span>
+              <div 
+                className="premiumSlide"
+                style={{
+                  backgroundImage: `url(${slide.image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
+                }}
+              >
+                <div className="premiumOverlay"></div>
+                <div className="premiumContent">
+                  <div className="premiumContainer">
+                    <div className="premiumText">
+                      <div className="premiumBadge">
+                        Ветеринарная клиника
                       </div>
-                    )}
-                    
-                    {slide.subscribers && (
-                      <div className="slideSocial">
-                        <span>{slide.subscribers}</span>
-                        <span> · {slide.friends}</span>
+                      <h1 className="premiumTitle">
+                        {slide.title}
+                      </h1>
+                      <p className="premiumSubtitle">
+                        {slide.subtitle}
+                      </p>
+                      <p className="premiumDescription">
+                        {slide.description}
+                      </p>
+                      
+                      <div className="premiumStats">
+                        {slide.stats.map((stat, index) => (
+                          <div key={index} className="premiumStat">
+                            <span className="statValue">{stat.value}</span>
+                            <span className="statLabel">{stat.label}</span>
+                          </div>
+                        ))}
                       </div>
-                    )}
-                    
-                    {slide.workingHours && (
-                      <div className="slideWorkingHours">{slide.workingHours}</div>
-                    )}
-                    
-                    <div className="slidePromo">
-                      <div className="promoTitle">{slide.promoTitle}</div>
-                      <p className="promoText">{slide.promoText}</p>
-                    </div>
-                    
-                    <div className="slideButtons">
-                      <Link to="/services" className="slideButton primary">ПОДРОБНЕЕ</Link>
-                      <button className="slideButton secondary">Подписаться</button>
+                      
+                      <Link to={slide.buttonLink} className="premiumButton">
+                        {slide.buttonText}
+                        <svg className="buttonArrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -122,20 +152,6 @@ function Home() {
             </SwiperSlide>
           ))}
         </Swiper>
-        
-        <div className="sliderControls">
-          <button className="slider-prev">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <div className="slider-pagination"></div>
-          <button className="slider-next">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        </div>
       </div>
 
       <section className="featuresSection">
