@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-
+import ReviewsSection from '../components/ReviewsSection';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -190,6 +190,11 @@ function Home() {
           </div>
         </div>
       </section>
+       {/* Блок с отзывами */}
+      <ReviewsSection />
+      
+  
+   
     </div>
   );
 }

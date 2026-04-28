@@ -19,5 +19,6 @@ export const petsCollection = collection(db, 'pets');
 export const requestsCollection = collection(db, 'requests');
 export const appointmentsCollection = collection(db, 'appointments');
 export const servicesCollection = collection(db, 'services');
+export const reviewsCollection = collection(db, 'reviews');
 
 export { addDoc, getDocs, deleteDoc, doc, signInWithEmailAndPassword, query, where, getDoc, updateDoc };

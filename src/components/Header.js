@@ -104,7 +104,7 @@ function Header({ admin, setAdmin }) {
             <span></span>
           </button>
         </div>
-      </header>
+      </header> 
       
       <div className="luxuryHeaderDecoration"></div>
     </>
