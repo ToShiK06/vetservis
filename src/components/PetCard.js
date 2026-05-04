@@ -2,17 +2,15 @@ import React, { useRef } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-function PetCard({ pet, onDelete }) {
+function PetCard({ pet, onDelete, onEdit }) {
   const pdfContentRef = useRef(null);
 
   const generatePDF = async () => {
     if (!pdfContentRef.current) return;
     
     try {
-      // Создаем временный div для рендера PDF контента
       const element = pdfContentRef.current;
       
-      // Конвертируем HTML в canvas
       const canvas = await html2canvas(element, {
         scale: 2,
         backgroundColor: '#ffffff',
@@ -20,7 +18,6 @@ function PetCard({ pet, onDelete }) {
         useCORS: true
       });
       
-      // Создаем PDF
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'portrait',
@@ -28,8 +25,8 @@ function PetCard({ pet, onDelete }) {
         format: 'a4'
       });
       
-      const imgWidth = 210; // A4 ширина в мм
-      const pageHeight = 297; // A4 высота в мм
+      const imgWidth = 210;
+      const pageHeight = 297;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       
       pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
@@ -51,14 +48,12 @@ function PetCard({ pet, onDelete }) {
           backgroundColor: 'white',
           fontFamily: 'Arial, sans-serif'
         }}>
-          {/* Шапка */}
           <div style={{ textAlign: 'center', marginBottom: '30px' }}>
             <h1 style={{ color: '#0A1931', fontSize: '28px', margin: 0 }}>ВЕТМАСТЕР</h1>
             <h2 style={{ color: '#4A7FA7', fontSize: '18px', margin: '10px 0' }}>Ветеринарный паспорт</h2>
             <div style={{ height: '2px', backgroundColor: '#B3CFE5', margin: '10px 0' }}></div>
           </div>
           
-          {/* Основная информация */}
           <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
             <tbody>
               <tr>
@@ -84,7 +79,6 @@ function PetCard({ pet, onDelete }) {
             </tbody>
           </table>
           
-          {/* Владелец */}
           <div style={{ marginTop: '20px' }}>
             <h3 style={{ color: '#0A1931', fontSize: '18px', marginBottom: '10px' }}>Владелец</h3>
             <div style={{ height: '1px', backgroundColor: '#B3CFE5', marginBottom: '15px' }}></div>
@@ -106,7 +100,6 @@ function PetCard({ pet, onDelete }) {
             </table>
           </div>
           
-          {/* Медицинские заметки */}
           {pet.medicalNotes && pet.medicalNotes.trim() !== '' && (
             <div style={{ marginTop: '20px' }}>
               <h3 style={{ color: '#0A1931', fontSize: '18px', marginBottom: '10px' }}>Медицинские заметки</h3>
@@ -117,7 +110,6 @@ function PetCard({ pet, onDelete }) {
             </div>
           )}
           
-          {/* Таблица прививок */}
           <div style={{ marginTop: '30px' }}>
             <h3 style={{ color: '#0A1931', fontSize: '18px', marginBottom: '10px' }}>Вакцинации и обработки</h3>
             <div style={{ height: '1px', backgroundColor: '#B3CFE5', marginBottom: '15px' }}></div>
@@ -141,7 +133,6 @@ function PetCard({ pet, onDelete }) {
             </table>
           </div>
           
-          {/* Нижний колонтитул */}
           <div style={{ marginTop: '40px', textAlign: 'center', color: '#B3CFE5', fontSize: '12px' }}>
             <p>ВетМастер - Забота о здоровье ваших питомцев</p>
             <p>Дата выдачи: {new Date().toLocaleDateString('ru-RU')}</p>
@@ -173,6 +164,9 @@ function PetCard({ pet, onDelete }) {
         <div className="cardButtons">
           <button onClick={generatePDF} className="pdfButton">
             Скачать PDF
+          </button>
+          <button onClick={() => onEdit(pet)} className="editButton">
+            Редактировать
           </button>
           <button onClick={() => onDelete(pet.id)} className="deleteButton">
             Удалить

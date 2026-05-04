@@ -3,6 +3,7 @@ import PetPassportForm from './PetPassportForm';
 import PetCard from './PetCard';
 import AdminRequests from './AdminRequests';
 import AdminServices from './AdminServices';
+import EditPetModal from './EditPetModal';
 import { db, petsCollection, getDocs, deleteDoc, doc } from '../firebase';
 import { auth } from '../firebase';
 
@@ -10,6 +11,8 @@ function AdminPanel({ setAdmin }) {
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('pets');
+  const [editingPet, setEditingPet] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   React.useEffect(() => {
     loadPets();
@@ -32,6 +35,15 @@ function AdminPanel({ setAdmin }) {
       await deleteDoc(doc(db, 'pets', petId));
       await loadPets();
     }
+  };
+
+  const handleEdit = (pet) => {
+    setEditingPet(pet);
+    setShowEditModal(true);
+  };
+
+  const handleUpdate = () => {
+    loadPets();
   };
 
   const handleLogout = async () => {
@@ -80,10 +92,17 @@ function AdminPanel({ setAdmin }) {
             <h2 className="sectionTitle">Паспорта питомцев</h2>
             {loading ? (
               <div>Загрузка...</div>
+            ) : pets.length === 0 ? (
+              <div className="noPets">Нет добавленных питомцев</div>
             ) : (
               <div className="petsGrid">
                 {pets.map(pet => (
-                  <PetCard key={pet.id} pet={pet} onDelete={handleDelete} />
+                  <PetCard 
+                    key={pet.id} 
+                    pet={pet} 
+                    onDelete={handleDelete}
+                    onEdit={handleEdit}
+                  />
                 ))}
               </div>
             )}
@@ -93,6 +112,14 @@ function AdminPanel({ setAdmin }) {
 
       {activeTab === 'services' && <AdminServices />}
       {activeTab === 'requests' && <AdminRequests />}
+
+      {showEditModal && editingPet && (
+        <EditPetModal 
+          pet={editingPet}
+          onClose={() => setShowEditModal(false)}
+          onUpdate={handleUpdate}
+        />
+      )}
     </div>
   );
 }

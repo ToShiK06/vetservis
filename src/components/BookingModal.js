@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { addDoc, appointmentsCollection, query, where, getDocs } from '../firebase';
+import emailjs from '@emailjs/browser';
+const EMAILJS_SERVICE_ID = 'service_xg0uah9';      
+const EMAILJS_TEMPLATE_ID = 'template_3gpkrh1';    
+const EMAILJS_PUBLIC_KEY = 'AIHGwDRKwVMI3nK-P';       
+const ADMIN_EMAIL = 'vetservis.st.rus@gmail.com';         
+
 
 function BookingModal({ service, onClose }) {
   const [formData, setFormData] = useState({
@@ -64,6 +70,38 @@ function BookingModal({ service, onClose }) {
     return phoneRegex.test(cleanPhone);
   };
 
+  // ========== ФУНКЦИЯ ОТПРАВКИ ПИСЬМА АДМИНУ ==========
+  const sendEmailToAdmin = async () => {
+    try {
+      const templateParams = {
+        to_email: ADMIN_EMAIL,
+        clientName: formData.clientName,
+        clientPhone: formData.clientPhone,
+        clientEmail: formData.clientEmail || 'Не указан',
+        serviceName: service.name,
+        servicePrice: service.price,
+        bookingDate: formData.bookingDate,
+        bookingTime: formData.bookingTime,
+        petName: formData.petName || 'Не указан',
+        petType: formData.petType || 'Не указан',
+        message: formData.message || 'Нет сообщения'
+      };
+
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+      console.log('✅ Письмо администратору отправлено');
+      return true;
+    } catch (error) {
+      console.error('❌ Ошибка отправки письма:', error);
+      return false;
+    }
+  };
+  // ===================================================
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -92,18 +130,25 @@ function BookingModal({ service, onClose }) {
     setSubmitError('');
     
     try {
+      // 1. Сохраняем запись в Firebase
       await addDoc(appointmentsCollection, {
         ...formData,
         serviceName: service.name,
         servicePrice: service.price,
         status: 'confirmed',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        adminNotified: false
       });
       
-      alert('Запись успешно создана! Мы свяжемся с вами.');
+      // 2. Отправляем письмо администратору
+      await sendEmailToAdmin();
+      
+      // 3. Успех
+      alert('Запись успешно создана! Уведомление отправлено администратору.');
       onClose();
     } catch (error) {
-      setSubmitError('Ошибка при бронировании');
+      console.error('Ошибка:', error);
+      setSubmitError('Ошибка при бронировании. Попробуйте позже.');
     } finally {
       setIsSubmitting(false);
     }

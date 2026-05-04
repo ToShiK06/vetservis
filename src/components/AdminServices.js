@@ -183,25 +183,6 @@ function AdminServices() {
             </div>
           </div>
           
-          <div className="formRow">
-            <div className="formGroup">
-              <label className="formLabel">Иконка</label>
-              <select
-                name="icon"
-                className="formInput"
-                value={formData.icon}
-                onChange={handleChange}
-              >
-                {icons.map(icon => (
-                  <option key={icon} value={icon}>{icon} {icon === '' ? 'Клиника' : icon === '' ? 'Укол' : icon === '' ? 'Лаборатория' : icon === '' ? 'Зуб' : icon === '' ? 'График' : icon === '' ? 'Лекарство' : icon === '' ? 'Дом' : icon === '' ? 'Звезда' : icon === '' ? 'Собака' : icon === '' ? 'Кошка' : 'Иконка'}</option>
-                ))}
-              </select>
-            </div>
-            <div className="formGroup">
-              <label className="formLabel">Превью иконки</label>
-              <div className="iconPreview">{formData.icon}</div>
-            </div>
-          </div>
           
           <div className="formGroup">
             <label className="formLabel">Описание</label>
@@ -239,7 +220,6 @@ function AdminServices() {
             <table>
               <thead>
                 <tr>
-                  <th>Иконка</th>
                   <th>Название</th>
                   <th>Цена</th>
                   <th>Категория</th>

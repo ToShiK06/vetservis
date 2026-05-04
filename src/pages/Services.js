@@ -8,6 +8,7 @@ function Services() {
   const [selectedService, setSelectedService] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [filterCategory, setFilterCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState(['all']);
   const cardsRef = useRef([]);
 
@@ -32,7 +33,7 @@ function Services() {
     });
 
     return () => observer.disconnect();
-  }, [services]);
+  }, [services, filterCategory, searchQuery]);
 
   const loadServices = async () => {
     try {
@@ -49,27 +50,38 @@ function Services() {
     }
   };
 
-  const filteredServices = filterCategory === 'all' 
-    ? services 
-    : services.filter(service => service.category === filterCategory);
+  // Фильтрация по категории и поиску
+  const filteredServices = services.filter(service => {
+    const matchesCategory = filterCategory === 'all' || service.category === filterCategory;
+    const matchesSearch = !searchQuery.trim() || 
+      service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (service.description && service.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (service.category && service.category.toLowerCase().includes(searchQuery.toLowerCase()));
+    return matchesCategory && matchesSearch;
+  });
 
   const handleBookService = (service) => {
     setSelectedService(service);
     setShowModal(true);
   };
 
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
+
   const defaultServices = [
-    {  name: 'Прием терапевта', price: 'от 1000 ₽', description: 'Осмотр, диагностика, назначение лечения. Опытные врачи с 10-летним стажем.', duration: '30 мин', category: 'Диагностика' },
-    {  name: 'Вакцинация', price: 'от 800 ₽', description: 'Прививки для кошек и собак. Только импортные вакцины.', duration: '20 мин', category: 'Вакцинация' },
-    {  name: 'Лаборатория', price: 'от 500 ₽', description: 'Анализы крови, мочи, цитология. Быстрые результаты.', duration: '15 мин', category: 'Лаборатория' },
-    {  name: 'УЗИ диагностика', price: 'от 1500 ₽', description: 'Ультразвуковое исследование органов. Расшифровка сразу.', duration: '30 мин', category: 'Диагностика' },
-    {  name: 'Стоматология', price: 'от 2000 ₽', description: 'Лечение зубов и полости рта. Профессиональная чистка.', duration: '45 мин', category: 'Стоматология' },
-    {  name: 'Выезд на дом', price: 'от 1500 ₽', description: 'Ветеринарная помощь на дому. Экономия вашего времени.', duration: '60 мин', category: 'Уход' },
-    {  name: 'Хирургия', price: 'от 5000 ₽', description: 'Операции любой сложности. Современная анестезия.', duration: '90 мин', category: 'Хирургия' },
-    {  name: 'Лечение', price: 'от 1000 ₽', description: 'Комплексное лечение заболеваний любой сложности.', duration: '30 мин', category: 'Лечение' }
+    { name: 'Прием терапевта', price: 'от 1000 ₽', description: 'Осмотр, диагностика, назначение лечения. Опытные врачи с 10-летним стажем.', duration: '30 мин', category: 'Диагностика', icon: '🏥' },
+    { name: 'Вакцинация', price: 'от 800 ₽', description: 'Прививки для кошек и собак. Только импортные вакцины.', duration: '20 мин', category: 'Вакцинация', icon: '💉' },
+    { name: 'Лаборатория', price: 'от 500 ₽', description: 'Анализы крови, мочи, цитология. Быстрые результаты.', duration: '15 мин', category: 'Лаборатория', icon: '🔬' },
+    { name: 'УЗИ диагностика', price: 'от 1500 ₽', description: 'Ультразвуковое исследование органов. Расшифровка сразу.', duration: '30 мин', category: 'Диагностика', icon: '📊' },
+    { name: 'Стоматология', price: 'от 2000 ₽', description: 'Лечение зубов и полости рта. Профессиональная чистка.', duration: '45 мин', category: 'Стоматология', icon: '🦷' },
+    { name: 'Выезд на дом', price: 'от 1500 ₽', description: 'Ветеринарная помощь на дому. Экономия вашего времени.', duration: '60 мин', category: 'Уход', icon: '🏠' },
+    { name: 'Хирургия', price: 'от 5000 ₽', description: 'Операции любой сложности. Современная анестезия.', duration: '90 мин', category: 'Хирургия', icon: '⚕️' },
+    { name: 'Лечение', price: 'от 1000 ₽', description: 'Комплексное лечение заболеваний любой сложности.', duration: '30 мин', category: 'Лечение', icon: '💊' }
   ];
 
   const displayServices = services.length > 0 ? services : defaultServices;
+  const finalServices = displayServices.length > 0 ? filteredServices : [];
 
   return (
     <div className="servicesPageNew">
@@ -95,8 +107,28 @@ function Services() {
         </div>
       </div>
 
-      {/* Фильтры */}
+      {/* Поиск и фильтры */}
       <div className="servicesFilterNew">
+        {/* Строка поиска */}
+        <div className="searchBoxNew">
+          <svg className="searchIconNew" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          <input
+            type="text"
+            className="searchInputNew"
+            placeholder="Поиск по названию, описанию или категории..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button className="searchClearNew" onClick={clearSearch}>
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* Фильтр по категориям */}
         <div className="filterContainerNew">
           {categories.map(cat => (
             <button
@@ -108,6 +140,13 @@ function Services() {
             </button>
           ))}
         </div>
+
+        {/* Результат поиска */}
+        {searchQuery && (
+          <div className="searchResultInfo">
+            Найдено услуг: {filteredServices.length}
+          </div>
+        )}
       </div>
 
       {/* Сетка услуг */}
@@ -116,6 +155,14 @@ function Services() {
           <div className="loader"></div>
           <p>Загрузка услуг...</p>
         </div>
+      ) : filteredServices.length === 0 ? (
+        <div className="noServicesFoundNew">
+          <h3>Ничего не найдено</h3>
+          <p>Попробуйте изменить поисковый запрос или выбрать другую категорию</p>
+          <button className="resetFiltersBtn" onClick={() => { setSearchQuery(''); setFilterCategory('all'); }}>
+            Сбросить все фильтры
+          </button>
+        </div>
       ) : (
         <div className="servicesGridNew">
           {filteredServices.map((service, idx) => (
@@ -123,7 +170,7 @@ function Services() {
               key={service.id || idx} 
               className="serviceCardNew" 
               ref={el => cardsRef.current[idx] = el}
-              style={{ animationDelay: `${idx * 0.1}s` }}
+              style={{ animationDelay: `${idx * 0.05}s` }}
             >
               <div className="serviceCardFront">
                 <div className="serviceIconWrapper">
@@ -148,12 +195,6 @@ function Services() {
               </div>
             </div>
           ))}
-        </div>
-      )}
-
-      {filteredServices.length === 0 && !loading && (
-        <div className="noServicesMessageNew">
-          <p>Нет услуг в выбранной категории</p>
         </div>
       )}
 

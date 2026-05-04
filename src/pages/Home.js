@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Pagination } from 'swiper/modules';
 import ReviewsSection from '../components/ReviewsSection';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import 'swiper/css/navigation';
 
 function Home() {
   const cardsRef = useRef([]);
@@ -92,12 +91,10 @@ function Home() {
     <div className="homePage">
       <div className="premiumSliderSection">
         <Swiper
-          modules={[Autoplay, Pagination, Navigation]}
+          modules={[Pagination]}
           spaceBetween={0}
           slidesPerView={1}
-          autoplay={{ delay: 6000, disableOnInteraction: false, pauseOnMouseEnter: true }}
           pagination={{ clickable: true }}
-          navigation={true}
           loop={true}
           speed={800}
           className="premiumSwiper"
@@ -190,11 +187,8 @@ function Home() {
           </div>
         </div>
       </section>
-       {/* Блок с отзывами */}
-      <ReviewsSection />
       
-  
-   
+      <ReviewsSection />
     </div>
   );
 }

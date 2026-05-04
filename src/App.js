@@ -11,6 +11,8 @@ import AdminPanel from './components/AdminPanel';
 import PrivateRoute from './components/PrivateRoute';
 import { auth } from './firebase';
 import './App.css';
+import ClientDashboard from './pages/ClientDashboard';
+import ClientRegister from './components/ClientRegister';
 
 // Компонент для отслеживания скролла
 function ScrollProgress() {
@@ -51,7 +53,19 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setAdmin(user);
+      if (user) {
+        // Жесткая проверка: админ только если email = admin@vetmaster.com
+        if (user.email === 'admin@vetmaster.com') {
+          console.log('Админ вошел:', user.email);
+          setAdmin(user);
+        } else {
+          console.log('Клиент вошел:', user.email);
+          setAdmin(null); // Важно! Обычный клиент - не админ
+        }
+      } else {
+        console.log('Пользователь не авторизован');
+        setAdmin(null);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -86,6 +100,8 @@ function App() {
                 <AdminPanel setAdmin={setAdmin} />
               </PrivateRoute>
             } />
+            <Route path="/dashboard" element={<ClientDashboard />} />
+            <Route path="/client-login" element={<ClientRegister />} />
           </Routes>
         </main>
         <Footer />
