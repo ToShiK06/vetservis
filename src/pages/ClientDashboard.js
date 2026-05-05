@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { auth, db, appointmentsCollection, petsCollection, getDocs, query, where, deleteDoc, doc } from '../firebase';
+import { Helmet } from 'react-helmet-async';
+import { auth, db, appointmentsCollection, petsCollection, getDocs, query, where, deleteDoc, doc, getDoc } from '../firebase';
+import ClientPetPassport from '../components/ClientPetPassport';
 
 function ClientDashboard() {
   const [appointments, setAppointments] = useState([]);
@@ -7,11 +9,12 @@ function ClientDashboard() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('appointments');
   const [userData, setUserData] = useState(null);
+  const [userPhone, setUserPhone] = useState(null);
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [showPassport, setShowPassport] = useState(false);
 
   useEffect(() => {
     loadUserData();
-    loadAppointments();
-    loadPets();
   }, []);
 
   const loadUserData = async () => {
@@ -21,7 +24,16 @@ function ClientDashboard() {
         email: user.email,
         uid: user.uid
       });
+      
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const userPhoneNumber = userDoc.data().phone;
+        setUserPhone(userPhoneNumber);
+        await loadPets(userPhoneNumber);
+      }
     }
+    await loadAppointments();
+    setLoading(false);
   };
 
   const loadAppointments = async () => {
@@ -39,19 +51,17 @@ function ClientDashboard() {
     }
   };
 
-  const loadPets = async () => {
+  const loadPets = async (phoneNumber) => {
+    if (!phoneNumber) return;
+    
     try {
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const q = query(petsCollection, where('ownerEmail', '==', user.email));
+      const normalizedPhone = phoneNumber.replace(/[\s\(\)\-]/g, '');
+      const q = query(petsCollection, where('ownerPhone', '==', normalizedPhone));
       const snapshot = await getDocs(q);
       const petsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setPets(petsData);
     } catch (error) {
       console.error('Ошибка загрузки питомцев:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -60,6 +70,11 @@ function ClientDashboard() {
       await deleteDoc(doc(db, 'appointments', appointmentId));
       loadAppointments();
     }
+  };
+
+  const openPassport = (pet) => {
+    setSelectedPet(pet);
+    setShowPassport(true);
   };
 
   const getStatusBadge = (status) => {
@@ -76,72 +91,96 @@ function ClientDashboard() {
   }
 
   return (
-    <div className="clientDashboard">
-      <div className="pageHeader">
-        <h1 className="pageTitle">Личный кабинет</h1>
-        <p className="pageSubtitle">Добро пожаловать, {userData?.email}</p>
-      </div>
+    <>
+      <Helmet>
+        <title>Личный кабинет | ВетСервис - Ветеринарная клиника</title>
+        <meta name="description" content="Личный кабинет клиента ветеринарной клиники ВетСервис. Просмотр записей на прием, электронные паспорта питомцев, история обращений." />
+        <meta name="robots" content="noindex, follow" />
+        <meta property="og:title" content="Личный кабинет - ВетСервис" />
+        <meta property="og:description" content="Управляйте записями и паспортами ваших питомцев в личном кабинете." />
+      </Helmet>
 
-      <div className="dashboardTabs">
-        <button className={`dashboardTab ${activeTab === 'appointments' ? 'active' : ''}`} onClick={() => setActiveTab('appointments')}>
-          Мои записи
-        </button>
-        <button className={`dashboardTab ${activeTab === 'pets' ? 'active' : ''}`} onClick={() => setActiveTab('pets')}>
-          Мои питомцы
-        </button>
-      </div>
+      <div className="clientDashboard">
+        <div className="pageHeader">
+          <h1 className="pageTitle">Личный кабинет</h1>
+          <p className="pageSubtitle">Добро пожаловать, {userData?.email}</p>
+        </div>
 
-      {activeTab === 'appointments' && (
-        <div className="dashboardAppointments">
-          {appointments.length === 0 ? (
-            <div className="noAppointments">
-              <p>У вас пока нет записей</p>
-              <button className="bookBtn" onClick={() => window.location.href = '/services'}>Записаться</button>
-            </div>
-          ) : (
-            appointments.map(app => (
-              <div key={app.id} className="dashboardAppointmentCard">
-                <div className="appointmentInfo">
-                  <h3>{app.serviceName}</h3>
-                  <p><strong>Дата:</strong> {app.bookingDate}</p>
-                  <p><strong>Время:</strong> {app.bookingTime}</p>
-                  <p><strong>Цена:</strong> {app.servicePrice}</p>
-                  {app.petName && <p><strong>Питомец:</strong> {app.petName}</p>}
+        <div className="dashboardTabs">
+          <button className={`dashboardTab ${activeTab === 'appointments' ? 'active' : ''}`} onClick={() => setActiveTab('appointments')}>
+            Мои записи
+          </button>
+          <button className={`dashboardTab ${activeTab === 'pets' ? 'active' : ''}`} onClick={() => setActiveTab('pets')}>
+            Мои питомцы
+          </button>
+        </div>
+
+        {activeTab === 'appointments' && (
+          <div className="dashboardAppointments">
+            {appointments.length === 0 ? (
+              <div className="noAppointments">
+                <p>У вас пока нет записей</p>
+                <button className="bookBtn" onClick={() => window.location.href = '/services'}>Записаться</button>
+              </div>
+            ) : (
+              appointments.map(app => (
+                <div key={app.id} className="dashboardAppointmentCard">
+                  <div className="appointmentInfo">
+                    <h3>{app.serviceName}</h3>
+                    <p><strong>Дата:</strong> {app.bookingDate}</p>
+                    <p><strong>Время:</strong> {app.bookingTime}</p>
+                    <p><strong>Цена:</strong> {app.servicePrice}</p>
+                    {app.petName && <p><strong>Питомец:</strong> {app.petName}</p>}
+                  </div>
+                  <div className="appointmentStatus">
+                    {getStatusBadge(app.status)}
+                    {app.status !== 'cancelled' && app.status !== 'completed' && (
+                      <button className="cancelAppointmentBtn" onClick={() => cancelAppointment(app.id)}>
+                        Отменить
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="appointmentStatus">
-                  {getStatusBadge(app.status)}
-                  {app.status !== 'cancelled' && app.status !== 'completed' && (
-                    <button className="cancelAppointmentBtn" onClick={() => cancelAppointment(app.id)}>
-                      Отменить
+              ))
+            )}
+          </div>
+        )}
+
+        {activeTab === 'pets' && (
+          <div className="dashboardPets">
+            {pets.length === 0 ? (
+              <div className="noPets">
+                <p>У вас пока нет зарегистрированных питомцев</p>
+                <p className="hintText">При создании паспорта питомца введите ваш номер телефона, и питомец появится здесь</p>
+              </div>
+            ) : (
+              <div className="clientPetsGrid">
+                {pets.map(pet => (
+                  <div key={pet.id} className="dashboardPetCard">
+                    <h3>{pet.petName}</h3>
+                    <p><strong>Вид:</strong> {pet.petType}</p>
+                    <p><strong>Порода:</strong> {pet.petBreed || '-'}</p>
+                    <p><strong>Возраст:</strong> {pet.petAge || '-'}</p>
+                    <p><strong>Окрас:</strong> {pet.petColor || '-'}</p>
+                    <p><strong>Владелец:</strong> {pet.ownerName}</p>
+                    <button className="viewPassportBtn" onClick={() => openPassport(pet)}>
+                      Смотреть паспорт
                     </button>
-                  )}
-                </div>
+                  </div>
+                ))}
               </div>
-            ))
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
 
-      {activeTab === 'pets' && (
-        <div className="dashboardPets">
-          {pets.length === 0 ? (
-            <div className="noPets">
-              <p>У вас пока нет зарегистрированных питомцев</p>
-            </div>
-          ) : (
-            pets.map(pet => (
-              <div key={pet.id} className="dashboardPetCard">
-                <h3>{pet.petName}</h3>
-                <p><strong>Вид:</strong> {pet.petType}</p>
-                <p><strong>Порода:</strong> {pet.petBreed || '-'}</p>
-                <p><strong>Возраст:</strong> {pet.petAge || '-'}</p>
-                <p><strong>Окрас:</strong> {pet.petColor || '-'}</p>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-    </div>
+        {showPassport && selectedPet && (
+          <ClientPetPassport 
+            pet={selectedPet}
+            onClose={() => setShowPassport(false)}
+          />
+        )}
+      </div>
+    </>
   );
 }
 

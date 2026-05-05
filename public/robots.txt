@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /client-login
+Disallow: /dashboard
+
+Sitemap: https://vetservis.vercel.app/sitemap.xml

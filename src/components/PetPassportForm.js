@@ -17,42 +17,52 @@ function PetPassportForm({ onPetAdded }) {
   const [phoneError, setPhoneError] = useState('');
   const [nameError, setNameError] = useState('');
 
-  // Список видов животных
   const animalTypes = [
-    'Собака',
-    'Кошка',
-    'Попугай',
-    'Хомяк',
-    'Морская свинка',
-    'Кролик',
-    'Хорек',
-    'Рыбка',
-    'Черепаха',
-    'Ящерица',
-    'Крыса',
-    'Мышь',
-    'Енот',
-    'Лиса',
-    'Другое'
+    'Собака', 'Кошка', 'Попугай', 'Хомяк', 'Морская свинка',
+    'Кролик', 'Хорек', 'Рыбка', 'Черепаха', 'Ящерица',
+    'Крыса', 'Мышь', 'Енот', 'Лиса', 'Другое'
   ];
 
-  // Валидация номера телефона (российские номера)
+  // Нормализация номера телефона в формат +7XXXXXXXXXX
+  const normalizePhone = (phone) => {
+    if (!phone) return '';
+    // Удаляем все пробелы, скобки, дефисы, плюсы
+    let cleaned = phone.replace(/[\s\(\)\-]/g, '');
+    // Убираем плюс если есть
+    cleaned = cleaned.replace('+', '');
+    
+    // Если начинается с 8, заменяем на +7
+    if (cleaned.startsWith('8')) {
+      cleaned = '+7' + cleaned.slice(1);
+    }
+    // Если начинается с 7, добавляем +
+    else if (cleaned.startsWith('7')) {
+      cleaned = '+' + cleaned;
+    }
+    // Если начинается с 9 (мобильный без кода страны)
+    else if (cleaned.startsWith('9')) {
+      cleaned = '+7' + cleaned;
+    }
+    // Если не начинается с +, добавляем
+    else if (!cleaned.startsWith('+')) {
+      cleaned = '+' + cleaned;
+    }
+    
+    return cleaned;
+  };
+
+  // Валидация номера телефона
   const validatePhone = (phone) => {
-    // Удаляем все пробелы, скобки, дефисы и плюсы
-    const cleanPhone = phone.replace(/[\s\(\)\-]/g, '');
-    
-    // Регулярное выражение для российских номеров
-    // Поддерживает: +7XXXXXXXXXX, 8XXXXXXXXXX, 7XXXXXXXXXX, 9XXXXXXXXXX
-    const phoneRegex = /^(\+7|7|8)?9\d{9}$/;
-    
     if (!phone) return 'Поле обязательно для заполнения';
-    if (!phoneRegex.test(cleanPhone)) {
-      return 'Введите корректный номер телефона (например: +79123456789 или 89123456789)';
+    const normalized = normalizePhone(phone);
+    // Проверяем формат +7XXXXXXXXXX (11 цифр после +7)
+    const phoneRegex = /^\+\d{1,3}\d{10}$/;
+    if (!phoneRegex.test(normalized)) {
+      return 'Введите корректный номер телефона (например: +79123456789)';
     }
     return '';
   };
 
-  // Валидация имени (только буквы, пробелы и дефисы)
   const validateName = (name) => {
     if (!name) return 'Поле обязательно для заполнения';
     const nameRegex = /^[А-Яа-яЁёA-Za-z\s\-]+$/;
@@ -62,11 +72,8 @@ function PetPassportForm({ onPetAdded }) {
     return '';
   };
 
-  // Форматирование телефона при вводе
   const formatPhone = (value) => {
-    // Удаляем все нецифровые символы
     const numbers = value.replace(/\D/g, '');
-    
     if (numbers.length === 0) return '';
     if (numbers.length <= 1) return `+${numbers}`;
     if (numbers.length <= 4) return `+${numbers.slice(0, 1)} ${numbers.slice(1)}`;
@@ -79,7 +86,6 @@ function PetPassportForm({ onPetAdded }) {
     const rawValue = e.target.value;
     const formattedValue = formatPhone(rawValue);
     const error = validatePhone(formattedValue);
-    
     setPhoneError(error);
     setFormData({
       ...formData,
@@ -90,7 +96,6 @@ function PetPassportForm({ onPetAdded }) {
   const handleNameChange = (e) => {
     const value = e.target.value;
     const error = validateName(value);
-    
     setNameError(error);
     setFormData({
       ...formData,
@@ -103,8 +108,6 @@ function PetPassportForm({ onPetAdded }) {
       ...formData,
       [e.target.name]: e.target.value
     });
-    
-    // Очищаем ошибки при изменении полей
     if (e.target.name === 'ownerName') {
       setNameError(validateName(e.target.value));
     }
@@ -116,7 +119,6 @@ function PetPassportForm({ onPetAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Проверка всех обязательных полей
     const phoneValid = !validatePhone(formData.ownerPhone);
     const nameValid = !validateName(formData.ownerName);
     
@@ -124,23 +126,23 @@ function PetPassportForm({ onPetAdded }) {
       alert('Пожалуйста, введите кличку питомца');
       return;
     }
-    
     if (!formData.petType) {
       alert('Пожалуйста, выберите вид животного');
       return;
     }
-    
     if (!nameValid) {
       alert('Пожалуйста, введите корректное ФИО владельца');
       return;
     }
-    
     if (!phoneValid) {
       alert('Пожалуйста, введите корректный номер телефона');
       return;
     }
 
     try {
+      // Нормализуем телефон перед сохранением
+      const normalizedPhone = normalizePhone(formData.ownerPhone);
+      
       await addDoc(petsCollection, {
         petName: formData.petName.trim(),
         petType: formData.petType,
@@ -148,7 +150,7 @@ function PetPassportForm({ onPetAdded }) {
         petAge: formData.petAge.trim(),
         petColor: formData.petColor.trim(),
         ownerName: formData.ownerName.trim(),
-        ownerPhone: formData.ownerPhone.trim(),
+        ownerPhone: normalizedPhone,  // Сохраняем в нормализованном формате
         ownerAddress: formData.ownerAddress.trim(),
         medicalNotes: formData.medicalNotes.trim(),
         createdAt: new Date().toISOString()
@@ -156,7 +158,6 @@ function PetPassportForm({ onPetAdded }) {
       
       alert('Паспорт питомца успешно создан');
       
-      // Очистка формы
       setFormData({
         petName: '',
         petType: '',
@@ -205,9 +206,7 @@ function PetPassportForm({ onPetAdded }) {
           >
             <option value="">Выберите вид животного</option>
             {animalTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
+              <option key={type} value={type}>{type}</option>
             ))}
           </select>
         </div>
@@ -298,7 +297,7 @@ function PetPassportForm({ onPetAdded }) {
             value={formData.medicalNotes}
             onChange={handleChange}
             placeholder="Прививки, аллергии, хронические заболевания..."
-          ></textarea>
+          />
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, db, doc, setDoc } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,10 +9,64 @@ function ClientRegister() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [phoneError, setPhoneError] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const navigate = useNavigate();
+
+  // Нормализация номера телефона в формат +7XXXXXXXXXX
+  const normalizePhone = (phoneNumber) => {
+    if (!phoneNumber) return '';
+    let cleaned = phoneNumber.replace(/[\s\(\)\-]/g, '');
+    cleaned = cleaned.replace('+', '');
+    
+    if (cleaned.startsWith('8')) {
+      cleaned = '+7' + cleaned.slice(1);
+    } else if (cleaned.startsWith('7')) {
+      cleaned = '+' + cleaned;
+    } else if (cleaned.startsWith('9')) {
+      cleaned = '+7' + cleaned;
+    } else if (!cleaned.startsWith('+')) {
+      cleaned = '+' + cleaned;
+    }
+    
+    return cleaned;
+  };
+
+  // Валидация телефона
+  const validatePhone = (phoneNumber) => {
+    if (!phoneNumber && !isLogin) {
+      return 'Поле обязательно для заполнения';
+    }
+    if (!phoneNumber) return '';
+    
+    const normalized = normalizePhone(phoneNumber);
+    const phoneRegex = /^\+\d{1,3}\d{10}$/;
+    if (!phoneRegex.test(normalized)) {
+      return 'Введите корректный номер телефона (например: +79123456789)';
+    }
+    return '';
+  };
+
+  // Форматирование телефона при вводе
+  const formatPhone = (value) => {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length === 0) return '';
+    if (numbers.length <= 1) return `+${numbers}`;
+    if (numbers.length <= 4) return `+${numbers.slice(0, 1)} ${numbers.slice(1)}`;
+    if (numbers.length <= 7) return `+${numbers.slice(0, 1)} ${numbers.slice(1, 4)} ${numbers.slice(4)}`;
+    if (numbers.length <= 9) return `+${numbers.slice(0, 1)} ${numbers.slice(1, 4)} ${numbers.slice(4, 7)} ${numbers.slice(7)}`;
+    return `+${numbers.slice(0, 1)} ${numbers.slice(1, 4)} ${numbers.slice(4, 7)} ${numbers.slice(7, 9)} ${numbers.slice(9, 11)}`;
+  };
+
+  const handlePhoneChange = (e) => {
+    const rawValue = e.target.value;
+    const formattedValue = formatPhone(rawValue);
+    const error = validatePhone(formattedValue);
+    setPhoneError(error);
+    setPhone(formattedValue);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,20 +75,26 @@ function ClientRegister() {
 
     try {
       if (isLogin) {
-        // Вход существующего клиента
         await signInWithEmailAndPassword(auth, email, password);
-        navigate('/dashboard'); // Перенаправляем в личный кабинет
+        navigate('/dashboard');
       } else {
-        // Регистрация нового клиента
+        // Проверка телефона при регистрации
+        const phoneValid = !validatePhone(phone);
+        if (!phoneValid) {
+          setError('Пожалуйста, введите корректный номер телефона');
+          setLoading(false);
+          return;
+        }
+
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         await setDoc(doc(db, 'users', userCredential.user.uid), {
           name: name,
           email: email,
-          phone: phone,
+          phone: normalizePhone(phone), // Сохраняем в нормализованном формате
           role: 'client',
           createdAt: new Date().toISOString()
         });
-        navigate('/dashboard'); // Перенаправляем в личный кабинет
+        navigate('/dashboard');
       }
     } catch (err) {
       if (err.code === 'auth/user-not-found') setError('Пользователь не найден');
@@ -65,71 +126,82 @@ function ClientRegister() {
   };
 
   return (
-    <div className="clientRegisterOverlay">
-      <div className="clientRegisterModal">
-        <div className="clientRegisterHeader">
-          <h2>{isLogin ? 'Вход в личный кабинет' : 'Регистрация'}</h2>
-        </div>
+    <>
+      <Helmet>
+        <title>{isLogin ? 'Вход в личный кабинет' : 'Регистрация'} | ВетСервис</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="description" content="Страница входа и регистрации в личном кабинете ветеринарной клиники ВетСервис. Только для зарегистрированных клиентов." />
+      </Helmet>
 
-        {resetSent ? (
-          <div className="resetSentMessage">
-            <p>Письмо для сброса пароля отправлено на {email}</p>
-            <button onClick={() => setResetSent(false)}>Вернуться ко входу</button>
+      <div className="clientRegisterOverlay">
+        <div className="clientRegisterModal">
+          <div className="clientRegisterHeader">
+            <h2>{isLogin ? 'Вход в личный кабинет' : 'Регистрация'}</h2>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="clientRegisterForm">
-            {!isLogin && (
-              <>
-                <input
-                  type="text"
-                  placeholder="Ваше имя"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-                <input
-                  type="tel"
-                  placeholder="Телефон"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </>
-            )}
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="Пароль (минимум 6 символов)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            {error && <div className="errorMessageForm">{error}</div>}
-            <button type="submit" disabled={loading}>
-              {loading ? 'Загрузка...' : (isLogin ? 'Войти' : 'Зарегистрироваться')}
-            </button>
-          </form>
-        )}
 
-        <div className="clientRegisterFooter">
-          {!resetSent && (
-            <button className="switchAuthBtn" onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? 'Нет аккаунта? Зарегистрироваться' : 'Уже есть аккаунт? Войти'}
-            </button>
+          {resetSent ? (
+            <div className="resetSentMessage">
+              <p>Письмо для сброса пароля отправлено на {email}</p>
+              <button onClick={() => setResetSent(false)}>Вернуться ко входу</button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="clientRegisterForm">
+              {!isLogin && (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Ваше имя *"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Телефон *"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    className={phoneError ? 'inputError' : ''}
+                    required
+                  />
+                  {phoneError && <div className="errorText">{phoneError}</div>}
+                </>
+              )}
+              <input
+                type="email"
+                placeholder="Email *"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                type="password"
+                placeholder="Пароль (минимум 6 символов) *"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              {error && <div className="errorMessageForm">{error}</div>}
+              <button type="submit" disabled={loading}>
+                {loading ? 'Загрузка...' : (isLogin ? 'Войти' : 'Зарегистрироваться')}
+              </button>
+            </form>
           )}
-          {isLogin && !resetSent && (
-            <button className="resetPasswordBtn" onClick={handleResetPassword}>
-              Забыли пароль?
-            </button>
-          )}
+
+          <div className="clientRegisterFooter">
+            {!resetSent && (
+              <button className="switchAuthBtn" onClick={() => setIsLogin(!isLogin)}>
+                {isLogin ? 'Нет аккаунта? Зарегистрироваться' : 'Уже есть аккаунт? Войти'}
+              </button>
+            )}
+            {isLogin && !resetSent && (
+              <button className="resetPasswordBtn" onClick={handleResetPassword}>
+                Забыли пароль?
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -4060,3 +4060,287 @@ html {
     padding-top: 80px;
   }
 }
+
+/* Client Pet Passport */
+.passportModal {
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.passportActions {
+  padding: 15px 25px;
+  border-bottom: 1px solid #B3CFE5;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.downloadPdfBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: #1A3D63;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.downloadPdfBtn:hover {
+  background: #4A7FA7;
+  transform: translateY(-2px);
+}
+
+.passportContent {
+  padding: 20px 25px;
+}
+
+.clientPassportForPrint {
+  background: white;
+  padding: 30px;
+  font-family: Arial, sans-serif;
+}
+
+.clientPassportForPrint .passportHeader {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.clientPassportForPrint .passportHeader h1 {
+  color: #0A1931;
+  font-size: 28px;
+  margin: 0;
+}
+
+.clientPassportForPrint .passportHeader h2 {
+  color: #4A7FA7;
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.clientPassportForPrint .passportDivider {
+  height: 2px;
+  background: #B3CFE5;
+  margin: 10px 0;
+}
+
+.clientPassportForPrint .passportSection {
+  margin-bottom: 25px;
+}
+
+.clientPassportForPrint .passportSection h3 {
+  color: #0A1931;
+  font-size: 18px;
+  margin-bottom: 15px;
+  border-left: 3px solid #4A7FA7;
+  padding-left: 12px;
+}
+
+.clientPassportForPrint .passportTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.clientPassportForPrint .passportTable td {
+  padding: 8px;
+  border-bottom: 1px solid #B3CFE5;
+}
+
+.clientPassportForPrint .passportTable .label {
+  width: 150px;
+  font-weight: bold;
+  color: #0A1931;
+}
+
+.clientPassportForPrint .passportTable .value {
+  color: #1A3D63;
+}
+
+.clientPassportForPrint .medicalNotes {
+  padding: 12px;
+  background: #F6FAFD;
+  border-radius: 8px;
+  color: #1A3D63;
+  line-height: 1.5;
+}
+
+.clientPassportForPrint .vaccinationsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.clientPassportForPrint .vaccinationsTable th,
+.clientPassportForPrint .vaccinationsTable td {
+  border: 1px solid #B3CFE5;
+  padding: 10px;
+  text-align: left;
+}
+
+.clientPassportForPrint .vaccinationsTable th {
+  background: #1A3D63;
+  color: white;
+}
+
+.clientPassportForPrint .passportFooter {
+  margin-top: 30px;
+  text-align: center;
+  color: #B3CFE5;
+  font-size: 12px;
+}
+
+.viewPassportBtn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  background: #4A7FA7;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.viewPassportBtn:hover {
+  background: #1A3D63;
+  transform: translateY(-2px);
+}
+/* Admin Services Table */
+.servicesTableWrapper {
+  overflow-x: auto;
+  background: white;
+  border-radius: 16px;
+  padding: 5px;
+}
+
+.servicesTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.servicesTable th,
+.servicesTable td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid #B3CFE5;
+}
+
+.servicesTable th {
+  background-color: #1A3D63;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.servicesTable tr:hover {
+  background-color: #F6FAFD;
+}
+
+.servicePriceCell {
+  font-weight: 700;
+  color: #4A7FA7;
+  white-space: nowrap;
+}
+
+.serviceDescSmall {
+  font-size: 12px;
+  color: #B3CFE5;
+  margin-top: 4px;
+}
+
+.serviceActionsCell {
+  white-space: nowrap;
+}
+
+.editServiceBtn {
+  background-color: #4A7FA7;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  margin-right: 8px;
+  transition: all 0.3s;
+}
+
+.editServiceBtn:hover {
+  background-color: #1A3D63;
+  transform: translateY(-1px);
+}
+
+.deleteServiceBtn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.deleteServiceBtn:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .servicesTable th,
+  .servicesTable td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  
+  .editServiceBtn,
+  .deleteServiceBtn {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+}
+
+/* Contact Map Links */
+.mapLinks {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.mapLink {
+  color: #4A7FA7;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+  padding: 8px 16px;
+  background: #F6FAFD;
+  border-radius: 30px;
+}
+
+.mapLink:hover {
+  background: #4A7FA7;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Стили для телефонной и email ссылок */
+.contactItem a {
+  color: #4A7FA7;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.contactItem a:hover {
+  color: #1A3D63;
+  text-decoration: underline;
+}

@@ -10,8 +10,7 @@ function AdminServices() {
     price: '',
     description: '',
     category: '',
-    duration: '30',
-    icon: ''
+    duration: '30'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,8 +24,6 @@ function AdminServices() {
     'Уход',
     'Другое'
   ];
-
-  const icons = [];
 
   useEffect(() => {
     loadServices();
@@ -72,8 +69,7 @@ function AdminServices() {
         price: '',
         description: '',
         category: '',
-        duration: '30',
-        icon: ''
+        duration: '30'
       });
       setEditingService(null);
       await loadServices();
@@ -90,10 +86,9 @@ function AdminServices() {
     setFormData({
       name: service.name,
       price: service.price,
-      description: service.description,
+      description: service.description || '',
       category: service.category || '',
-      duration: service.duration || '30',
-      icon: service.icon || ''
+      duration: service.duration || '30'
     });
   };
 
@@ -111,8 +106,7 @@ function AdminServices() {
       price: '',
       description: '',
       category: '',
-      duration: '30',
-      icon: ''
+      duration: '30'
     });
   };
 
@@ -144,7 +138,7 @@ function AdminServices() {
                 value={formData.price}
                 onChange={handleChange}
                 required
-                placeholder="Например: 1000 ₽ или от 1000 ₽"
+                placeholder="Например: 1000 руб или от 1000 руб"
               />
             </div>
           </div>
@@ -183,7 +177,6 @@ function AdminServices() {
             </div>
           </div>
           
-          
           <div className="formGroup">
             <label className="formLabel">Описание</label>
             <textarea
@@ -216,8 +209,8 @@ function AdminServices() {
         ) : services.length === 0 ? (
           <div className="noServices">Нет добавленных услуг</div>
         ) : (
-          <div className="servicesTable">
-            <table>
+          <div className="servicesTableWrapper">
+            <table className="servicesTable">
               <thead>
                 <tr>
                   <th>Название</th>
@@ -230,14 +223,20 @@ function AdminServices() {
               <tbody>
                 {services.map(service => (
                   <tr key={service.id}>
-                    <td className="serviceIconCell">{service.icon || ''}</td>
-                    <td><strong>{service.name}</strong><br/><small>{service.description?.substring(0, 50)}...</small></td>
+                    <td>
+                      <strong>{service.name}</strong>
+                      {service.description && <div className="serviceDescSmall">{service.description.substring(0, 50)}...</div>}
+                    </td>
                     <td className="servicePriceCell">{service.price}</td>
                     <td>{service.category || '-'}</td>
                     <td>{service.duration} мин</td>
                     <td className="serviceActionsCell">
-                      <button className="editServiceBtn" onClick={() => handleEdit(service)}></button>
-                      <button className="deleteServiceBtn" onClick={() => handleDelete(service.id)}></button>
+                      <button className="editServiceBtn" onClick={() => handleEdit(service)}>
+                        Редактировать
+                      </button>
+                      <button className="deleteServiceBtn" onClick={() => handleDelete(service.id)}>
+                        Удалить
+                      </button>
                     </td>
                   </tr>
                 ))}
