@@ -51,7 +51,6 @@ function Services() {
     }
   };
 
-  // Фильтрация по категории и поиску
   const filteredServices = services.filter(service => {
     const matchesCategory = filterCategory === 'all' || service.category === filterCategory;
     const matchesSearch = !searchQuery.trim() || 
@@ -71,165 +70,120 @@ function Services() {
   };
 
   const defaultServices = [
-    { name: 'Прием терапевта', price: 'от 1000 ₽', description: 'Осмотр, диагностика, назначение лечения. Опытные врачи с 10-летним стажем.', duration: '30 мин', category: 'Диагностика',  },
-    { name: 'Вакцинация', price: 'от 800 ₽', description: 'Прививки для кошек и собак. Только импортные вакцины.', duration: '20 мин', category: 'Вакцинация',  },
-    { name: 'Лаборатория', price: 'от 500 ₽', description: 'Анализы крови, мочи, цитология. Быстрые результаты.', duration: '15 мин', category: 'Лаборатория',  },
-    { name: 'УЗИ диагностика', price: 'от 1500 ₽', description: 'Ультразвуковое исследование органов. Расшифровка сразу.', duration: '30 мин', category: 'Диагностика', },
-    { name: 'Стоматология', price: 'от 2000 ₽', description: 'Лечение зубов и полости рта. Профессиональная чистка.', duration: '45 мин', category: 'Стоматология',  },
-    { name: 'Выезд на дом', price: 'от 1500 ₽', description: 'Ветеринарная помощь на дому. Экономия вашего времени.', duration: '60 мин', category: 'Уход',  },
-    { name: 'Хирургия', price: 'от 5000 ₽', description: 'Операции любой сложности. Современная анестезия.', duration: '90 мин', category: 'Хирургия', },
-    { name: 'Лечение', price: 'от 1000 ₽', description: 'Комплексное лечение заболеваний любой сложности.', duration: '30 мин', category: 'Лечение',  }
+    { name: 'Прием терапевта', price: 'от 1000 ₽', description: 'Осмотр, диагностика, назначение лечения. Опытные врачи с 10-летним стажем.', duration: '30 мин', category: 'Диагностика' },
+    { name: 'Вакцинация', price: 'от 800 ₽', description: 'Прививки для кошек и собак. Только импортные вакцины.', duration: '20 мин', category: 'Вакцинация' },
+    { name: 'Лаборатория', price: 'от 500 ₽', description: 'Анализы крови, мочи, цитология. Быстрые результаты.', duration: '15 мин', category: 'Лаборатория' },
+    { name: 'УЗИ диагностика', price: 'от 1500 ₽', description: 'Ультразвуковое исследование органов. Расшифровка сразу.', duration: '30 мин', category: 'Диагностика' },
+    { name: 'Стоматология', price: 'от 2000 ₽', description: 'Лечение зубов и полости рта. Профессиональная чистка.', duration: '45 мин', category: 'Стоматология' },
+    { name: 'Выезд на дом', price: 'от 1500 ₽', description: 'Ветеринарная помощь на дому. Экономия вашего времени.', duration: '60 мин', category: 'Уход' },
+    { name: 'Хирургия', price: 'от 5000 ₽', description: 'Операции любой сложности. Современная анестезия.', duration: '90 мин', category: 'Хирургия' },
+    { name: 'Лечение', price: 'от 1000 ₽', description: 'Комплексное лечение заболеваний любой сложности.', duration: '30 мин', category: 'Лечение' }
   ];
 
   const displayServices = services.length > 0 ? services : defaultServices;
-  const finalServices = displayServices.length > 0 ? filteredServices : [];
 
   return (
     <>
       <Helmet>
         <title>Услуги | ВетСервис - Ветеринарная клиника в Старой Руссе</title>
-        <meta name="description" content="Услуги ветеринарной клиники ВетСервис в Старой Руссе: прием терапевта, вакцинация, хирургия, УЗИ-диагностика, лабораторные анализы, стоматология, выезд на дом. Доступные цены от 500 ₽." />
-        <meta name="keywords" content="ветеринарные услуги, вакцинация, хирургия, УЗИ, стоматология, лечение животных, цены" />
-        <meta property="og:title" content="Услуги ветеринарной клиники ВетСервис" />
-        <meta property="og:description" content="Полный спектр ветеринарных услуг для ваших питомцев. Современное оборудование, опытные врачи. Запишитесь на прием." />
-        <meta property="og:url" content="https://vetservis.vercel.app/services" />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary" />
+        <meta name="description" content="Услуги ветеринарной клиники ВетСервис: прием терапевта, вакцинация, хирургия, УЗИ-диагностика, лабораторные анализы. Доступные цены от 500 ₽." />
       </Helmet>
 
-      <div className="servicesPageNew">
+      <div className="servicesPageModern">
         {/* Hero секция */}
-        <div className="servicesHero">
-          <div className="servicesHeroContent">
-            <h1 className="servicesHeroTitle">Наши услуги</h1>
-            <p className="servicesHeroSubtitle">Профессиональная помощь вашим питомцам</p>
-            <div className="servicesHeroStats">
-              <div className="heroStat">
-                <span className="heroStatValue">15+</span>
-                <span className="heroStatLabel">лет опыта</span>
-              </div>
-              <div className="heroStat">
-                <span className="heroStatValue">5000+</span>
-                <span className="heroStatLabel">довольных клиентов</span>
-              </div>
-              <div className="heroStat">
-                <span className="heroStatValue">24/7</span>
-                <span className="heroStatLabel">круглосуточно</span>
-              </div>
-            </div>
+        <div className="servicesHeroModern">
+          <div className="servicesHeroContentModern">
+            <h1 className="servicesHeroTitleModern">Наши услуги</h1>
+            <p className="servicesHeroSubtitleModern">Профессиональная помощь вашим питомцам</p>
           </div>
         </div>
 
         {/* Поиск и фильтры */}
-        <div className="servicesFilterNew">
-          {/* Строка поиска */}
-          <div className="searchBoxNew">
-            <svg className="searchIconNew" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <div className="servicesFilterModern">
+          <div className="searchBoxModern">
+            <svg className="searchIconModern" width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <input
               type="text"
-              className="searchInputNew"
-              placeholder="Поиск по названию, описанию или категории..."
+              className="searchInputModern"
+              placeholder="Поиск услуги..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
-              <button className="searchClearNew" onClick={clearSearch}>
-                ✕
-              </button>
+              <button className="searchClearModern" onClick={clearSearch}>✕</button>
             )}
           </div>
 
-          {/* Фильтр по категориям */}
-          <div className="filterContainerNew">
+          <div className="filterContainerModern">
             {categories.map(cat => (
               <button
                 key={cat}
-                className={`filterChipNew ${filterCategory === cat ? 'active' : ''}`}
+                className={`filterChipModern ${filterCategory === cat ? 'active' : ''}`}
                 onClick={() => setFilterCategory(cat)}
               >
                 {cat === 'all' ? 'Все услуги' : cat}
               </button>
             ))}
           </div>
-
-          {/* Результат поиска */}
-          {searchQuery && (
-            <div className="searchResultInfo">
-              Найдено услуг: {filteredServices.length}
-            </div>
-          )}
         </div>
 
         {/* Сетка услуг */}
         {loading ? (
-          <div className="loadingServicesNew">
-            <div className="loader"></div>
-            <p>Загрузка услуг...</p>
-          </div>
+          <div className="loadingServicesModern">Загрузка услуг...</div>
         ) : filteredServices.length === 0 ? (
-          <div className="noServicesFoundNew">
+          <div className="noServicesFoundModern">
             <h3>Ничего не найдено</h3>
-            <p>Попробуйте изменить поисковый запрос или выбрать другую категорию</p>
-            <button className="resetFiltersBtn" onClick={() => { setSearchQuery(''); setFilterCategory('all'); }}>
-              Сбросить все фильтры
+            <p>Попробуйте изменить поисковый запрос</p>
+            <button className="resetFiltersBtnModern" onClick={() => { setSearchQuery(''); setFilterCategory('all'); }}>
+              Сбросить фильтры
             </button>
           </div>
         ) : (
-          <div className="servicesGridNew">
+          <div className="servicesGridModern">
             {filteredServices.map((service, idx) => (
               <div 
                 key={service.id || idx} 
-                className="serviceCardNew" 
+                className="serviceCardModern" 
                 ref={el => cardsRef.current[idx] = el}
-                style={{ animationDelay: `${idx * 0.05}s` }}
               >
-                <div className="serviceCardFront">
-                  <div className="serviceIconWrapper">
-                    <span className="serviceIconNew">{service.icon || ''}</span>
-                  </div>
-                  <h3 className="serviceNameNew">{service.name}</h3>
-                  <div className="servicePriceNew">{service.price}</div>
-                  <div className="serviceDurationNew">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                      <polyline points="12 6 12 12 16 14" stroke="currentColor" strokeWidth="2"/>
-                    </svg>
-                    {service.duration || '30 мин'}
-                  </div>
-                  <p className="serviceDescriptionNew">{service.description}</p>
-                  <button className="bookServiceBtnNew" onClick={() => handleBookService(service)}>
-                    Записаться
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2"/>
-                    </svg>
-                  </button>
+                <div className="serviceCardHeader">
+                  <h3 className="serviceNameModern">{service.name}</h3>
+                  <div className="servicePriceModern">{service.price}</div>
                 </div>
+                <div className="serviceDurationModern">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                    <polyline points="12 6 12 12 16 14" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  {service.duration || '30 мин'}
+                </div>
+                <p className="serviceDescriptionModern">{service.description || 'Профессиональная помощь в нашей клинике'}</p>
+                <button className="bookServiceBtnModern" onClick={() => handleBookService(service)}>
+                  Записаться
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                </button>
               </div>
             ))}
           </div>
         )}
 
         {/* CTA Блок */}
-        <div className="servicesCta">
-          <div className="servicesCtaContent">
+        <div className="servicesCtaModern">
+          <div className="servicesCtaContentModern">
             <h2>Не нашли нужную услугу?</h2>
-            <p>Свяжитесь с нами, и мы подберем индивидуальное решение для вашего питомца</p>
-            <button className="servicesCtaBtn" onClick={() => window.location.href = '/contacts'}>
+            <p>Свяжитесь с нами, и мы подберем индивидуальное решение</p>
+            <button className="servicesCtaBtnModern" onClick={() => window.location.href = '/contacts'}>
               Связаться с нами
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2"/>
-              </svg>
             </button>
           </div>
         </div>
 
         {showModal && selectedService && (
-          <BookingModal 
-            service={selectedService}
-            onClose={() => setShowModal(false)}
-          />
+          <BookingModal service={selectedService} onClose={() => setShowModal(false)} />
         )}
       </div>
     </>

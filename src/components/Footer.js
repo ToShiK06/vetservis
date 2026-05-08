@@ -36,37 +36,10 @@ function Footer() {
               </div>
             </div>
             <p className="luxuryFooterDescription">
-              Профессиональная ветеринарная помощь с 2010 года. Забота о здоровье ваших питомцев - наша главная задача.
+              Профессиональная ветеринарная помощь с 2025 года. Забота о здоровье ваших питомцев - наша главная задача.
             </p>
-            <div className="luxuryFooterSocial">
-              <a href="#" className="luxurySocialLink">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
-              <a href="#" className="luxurySocialLink">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
-              <a href="#" className="luxurySocialLink">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <rect x="2" y="2" width="20" height="20" rx="4" stroke="currentColor" strokeWidth="2"/>
-                  <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2"/>
-                  <circle cx="18" cy="6" r="1" fill="currentColor"/>
-                </svg>
-              </a>
-              <a href="#" className="luxurySocialLink">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <rect x="2" y="9" width="4" height="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="4" cy="4" r="2" stroke="currentColor" strokeWidth="2"/>
-                </svg>
-              </a>
-            </div>
           </div>
 
-          {/* Колонка 2 - Быстрые ссылки */}
           <div className="luxuryFooterCol">
             <h4 className="luxuryFooterTitle">Навигация</h4>
             <ul className="luxuryFooterLinks">
@@ -77,7 +50,6 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Колонка 3 - Услуги */}
           <div className="luxuryFooterCol">
             <h4 className="luxuryFooterTitle">Услуги</h4>
             <ul className="luxuryFooterLinks">
@@ -89,7 +61,6 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Колонка 4 - Контакты */}
           <div className="luxuryFooterCol">
             <h4 className="luxuryFooterTitle">Контакты</h4>
             <div className="luxuryFooterContact">

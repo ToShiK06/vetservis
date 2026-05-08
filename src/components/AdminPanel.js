@@ -3,6 +3,7 @@ import PetPassportForm from './PetPassportForm';
 import PetCard from './PetCard';
 import AdminRequests from './AdminRequests';
 import AdminServices from './AdminServices';
+import AdminReviews from './AdminReviews';
 import EditPetModal from './EditPetModal';
 import { db, petsCollection, getDocs, deleteDoc, doc } from '../firebase';
 import { auth } from '../firebase';
@@ -79,6 +80,12 @@ function AdminPanel({ setAdmin }) {
         >
           Записи клиентов
         </button>
+        <button 
+          className={`tabButton ${activeTab === 'reviews' ? 'active' : ''}`}
+          onClick={() => setActiveTab('reviews')}
+        >
+          Отзывы
+        </button>
       </div>
 
       {activeTab === 'pets' && (
@@ -112,6 +119,7 @@ function AdminPanel({ setAdmin }) {
 
       {activeTab === 'services' && <AdminServices />}
       {activeTab === 'requests' && <AdminRequests />}
+      {activeTab === 'reviews' && <AdminReviews />}
 
       {showEditModal && editingPet && (
         <EditPetModal 
