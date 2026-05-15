@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { addDoc, appointmentsCollection, query, where, getDocs } from '../firebase';
+import { auth } from '../firebase';
 
 function BookingForm() {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ function BookingForm() {
   const [submitError, setSubmitError] = useState('');
   const [bookedTimes, setBookedTimes] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const serviceTypes = [
     'Прием терапевта',
@@ -33,7 +35,6 @@ function BookingForm() {
 
   const petTypes = ['Собака', 'Кошка', 'Птица', 'Грызун', 'Рептилия', 'Другое'];
 
-  // Все доступные временные слоты
   const allTimeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
     '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
@@ -41,12 +42,30 @@ function BookingForm() {
     '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'
   ];
 
-  // Загрузка занятых временных слотов при выборе даты
+  // Проверка авторизации при загрузке компонента
   useEffect(() => {
-    if (formData.bookingDate) {
+    const user = auth.currentUser;
+    if (!user) {
+      setSubmitError('Для отправки заявки необходимо войти в аккаунт');
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000);
+    } else {
+      setIsAuthenticated(true);
+      // Автоматически заполняем email и имя, если есть
+      setFormData(prev => ({
+        ...prev,
+        clientEmail: user.email || '',
+        clientName: user.displayName || ''
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (formData.bookingDate && isAuthenticated) {
       loadBookedTimes(formData.bookingDate);
     }
-  }, [formData.bookingDate]);
+  }, [formData.bookingDate, isAuthenticated]);
 
   const loadBookedTimes = async (date) => {
     try {
@@ -59,7 +78,6 @@ function BookingForm() {
       const booked = snapshot.docs.map(doc => doc.data().bookingTime);
       setBookedTimes(booked);
       
-      // Фильтруем доступные слоты
       const available = allTimeSlots.filter(time => !booked.includes(time));
       setAvailableTimes(available);
     } catch (error) {
@@ -82,6 +100,16 @@ function BookingForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Проверка авторизации
+    const user = auth.currentUser;
+    if (!user) {
+      setSubmitError('Для отправки заявки необходимо войти в аккаунт');
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000);
+      return;
+    }
     
     if (!formData.clientName) {
       setSubmitError('Пожалуйста, введите ваше имя');
@@ -108,7 +136,6 @@ function BookingForm() {
       return;
     }
     
-    // Проверяем, не занято ли уже это время
     if (bookedTimes.includes(formData.bookingTime)) {
       setSubmitError('Это время уже занято. Пожалуйста, выберите другое время.');
       return;
@@ -118,20 +145,21 @@ function BookingForm() {
     setSubmitError('');
     
     try {
-      // Создаем запись о бронировании
       await addDoc(appointmentsCollection, {
         ...formData,
         status: 'confirmed',
         createdAt: new Date().toISOString(),
         bookingDate: formData.bookingDate,
-        bookingTime: formData.bookingTime
+        bookingTime: formData.bookingTime,
+        userId: user.uid,
+        userEmail: user.email
       });
       
       setSubmitSuccess(true);
       setFormData({
         clientName: '',
         clientPhone: '',
-        clientEmail: '',
+        clientEmail: user.email || '',
         petName: '',
         petType: '',
         serviceType: '',
@@ -154,7 +182,6 @@ function BookingForm() {
     }
   };
 
-  // Получаем минимальную дату (сегодня)
   const getMinDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -163,7 +190,6 @@ function BookingForm() {
     return `${year}-${month}-${day}`;
   };
 
-  // Получаем максимальную дату (через 30 дней)
   const getMaxDate = () => {
     const max = new Date();
     max.setDate(max.getDate() + 30);
@@ -172,6 +198,29 @@ function BookingForm() {
     const day = String(max.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="bookingFormSection">
+        <div className="bookingFormContainer">
+          <div className="bookingFormHeader">
+            <h2 className="bookingFormTitle">Запись на прием</h2>
+            <p className="bookingFormSubtitle">Выберите удобную дату и время</p>
+          </div>
+          <div className="errorMessageForm">
+            Для записи на прием необходимо войти в аккаунт
+          </div>
+          <button 
+            className="submitBookingButton" 
+            onClick={() => window.location.href = '/login'}
+            style={{ marginTop: '20px' }}
+          >
+            Перейти к входу
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bookingFormSection">

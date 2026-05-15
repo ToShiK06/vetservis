@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { addDoc, appointmentsCollection, query, where, getDocs } from '../firebase';
+import { auth } from '../firebase';
 import emailjs from '@emailjs/browser';
+
 const EMAILJS_SERVICE_ID = 'service_xg0uah9';      
 const EMAILJS_TEMPLATE_ID = 'template_3gpkrh1';    
 const EMAILJS_PUBLIC_KEY = 'AIHGwDRKwVMI3nK-P';       
 const ADMIN_EMAIL = 'vetservis.st.rus@gmail.com';         
-
 
 function BookingModal({ service, onClose }) {
   const [formData, setFormData] = useState({
@@ -32,6 +33,16 @@ function BookingModal({ service, onClose }) {
   ];
 
   const petTypes = ['Собака', 'Кошка', 'Птица', 'Грызун', 'Рептилия', 'Другое'];
+
+  // Проверка авторизации при открытии модального окна
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) {
+      alert('Для записи необходимо войти в аккаунт');
+      onClose();
+      window.location.href = '/login';
+    }
+  }, [onClose]);
 
   useEffect(() => {
     if (formData.bookingDate) {
@@ -70,7 +81,6 @@ function BookingModal({ service, onClose }) {
     return phoneRegex.test(cleanPhone);
   };
 
-  // ========== ФУНКЦИЯ ОТПРАВКИ ПИСЬМА АДМИНУ ==========
   const sendEmailToAdmin = async () => {
     try {
       const templateParams = {
@@ -93,17 +103,26 @@ function BookingModal({ service, onClose }) {
         templateParams,
         EMAILJS_PUBLIC_KEY
       );
-      console.log('✅ Письмо администратору отправлено');
+      console.log('Письмо администратору отправлено');
       return true;
     } catch (error) {
-      console.error('❌ Ошибка отправки письма:', error);
+      console.error('Ошибка отправки письма:', error);
       return false;
     }
   };
-  // ===================================================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Дополнительная проверка авторизации перед отправкой
+    const user = auth.currentUser;
+    if (!user) {
+      setSubmitError('Необходимо войти в аккаунт для записи');
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000);
+      return;
+    }
     
     if (!formData.clientName) {
       setSubmitError('Введите ваше имя');
@@ -130,21 +149,20 @@ function BookingModal({ service, onClose }) {
     setSubmitError('');
     
     try {
-      // 1. Сохраняем запись в Firebase
       await addDoc(appointmentsCollection, {
         ...formData,
         serviceName: service.name,
         servicePrice: service.price,
         status: 'confirmed',
         createdAt: new Date().toISOString(),
-        adminNotified: false
+        adminNotified: false,
+        userId: user.uid,
+        userEmail: user.email
       });
       
-      // 2. Отправляем письмо администратору
       await sendEmailToAdmin();
       
-      // 3. Успех
-      alert('Запись успешно создана! Уведомление отправлено администратору.');
+      alert('Запись успешно создана! Уведомление отправлено.');
       onClose();
     } catch (error) {
       console.error('Ошибка:', error);

@@ -7,14 +7,26 @@ function ReviewsSection() {
   const [newReview, setNewReview] = useState({ name: '', rating: 5, text: '' });
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     loadReviews();
+    // Проверяем авторизацию пользователя
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        // Если пользователь авторизован, предзаполняем имя из email
+        setNewReview(prev => ({
+          ...prev,
+          name: currentUser.email ? currentUser.email.split('@')[0] : ''
+        }));
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   const loadReviews = async () => {
     try {
-      // Показываем только опубликованные отзывы
       const q = query(reviewsCollection, where('status', '==', 'approved'));
       const snapshot = await getDocs(q);
       const reviewsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -29,6 +41,14 @@ function ReviewsSection() {
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
+    
+    // Проверка авторизации
+    if (!user) {
+      alert('Для отправки отзыва необходимо войти в аккаунт');
+      window.location.href = '/login';
+      return;
+    }
+    
     if (!newReview.name || !newReview.text) return;
     
     setIsSubmitting(true);
@@ -38,9 +58,11 @@ function ReviewsSection() {
         rating: parseInt(newReview.rating),
         text: newReview.text,
         date: new Date().toISOString(),
-        status: 'pending' // На модерации
+        status: 'pending',
+        userId: user.uid,
+        userEmail: user.email
       });
-      setNewReview({ name: '', rating: 5, text: '' });
+      setNewReview({ name: user.email ? user.email.split('@')[0] : '', rating: 5, text: '' });
       alert('Спасибо за отзыв! Он будет опубликован после модерации.');
     } catch (error) {
       console.error('Ошибка:', error);
@@ -84,31 +106,40 @@ function ReviewsSection() {
       
       <div className="reviewForm">
         <h3>Оставить отзыв</h3>
-        <form onSubmit={handleSubmitReview}>
-          <input
-            type="text"
-            placeholder="Ваше имя"
-            value={newReview.name}
-            onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-            required
-          />
-          <select
-            value={newReview.rating}
-            onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value) })}
-          >
-            {[5,4,3,2,1].map(r => <option key={r} value={r}>{r} звезд</option>)}
-          </select>
-          <textarea
-            placeholder="Ваш отзыв"
-            value={newReview.text}
-            onChange={(e) => setNewReview({ ...newReview, text: e.target.value })}
-            required
-            rows="3"
-          />
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Отправка...' : 'Оставить отзыв'}
-          </button>
-        </form>
+        {!user ? (
+          <div className="loginRequiredMessage">
+            <p>Для отправки отзыва необходимо войти в аккаунт</p>
+            <button className="loginRequiredBtn" onClick={() => window.location.href = '/login'}>
+              Войти в аккаунт
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmitReview}>
+            <input
+              type="text"
+              placeholder="Ваше имя"
+              value={newReview.name}
+              onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+              required
+            />
+            <select
+              value={newReview.rating}
+              onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value) })}
+            >
+              {[5,4,3,2,1].map(r => <option key={r} value={r}>{r} звезд</option>)}
+            </select>
+            <textarea
+              placeholder="Ваш отзыв"
+              value={newReview.text}
+              onChange={(e) => setNewReview({ ...newReview, text: e.target.value })}
+              required
+              rows="3"
+            />
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Отправка...' : 'Оставить отзыв'}
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );

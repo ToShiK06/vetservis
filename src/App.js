@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import Contacts from './pages/Contacts';
 import About from './pages/About';
-import Login from './components/Login';
 import AdminPanel from './components/AdminPanel';
 import PrivateRoute from './components/PrivateRoute';
 import { auth } from './firebase';
 import './App.css';
 import ClientDashboard from './pages/ClientDashboard';
 import ClientRegister from './components/ClientRegister';
+import UnifiedLogin from './components/UnifiedLogin';
 
 // Компонент для отслеживания скролла
 function ScrollProgress() {
@@ -47,6 +47,35 @@ function ScrollToTop() {
   return null;
 }
 
+// Компонент для защиты маршрута клиента
+function PrivateClientRoute({ children }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <div className="loadingScreen"><div className="loadingSpinner"></div><p>Загрузка...</p></div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Если пользователь админ, перенаправляем в админку
+  if (user.email === 'admin@vetmaster.com') {
+    return <Navigate to="/admin" replace />;
+  }
+
+  return children;
+}
+
 function App() {
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -54,13 +83,12 @@ function App() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        // Жесткая проверка: админ только если email = admin@vetmaster.com
         if (user.email === 'admin@vetmaster.com') {
           console.log('Админ вошел:', user.email);
           setAdmin(user);
         } else {
           console.log('Клиент вошел:', user.email);
-          setAdmin(null); // Важно! Обычный клиент - не админ
+          setAdmin(null);
         }
       } else {
         console.log('Пользователь не авторизован');
@@ -94,13 +122,17 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/about" element={<About />} />
-            <Route path="/login" element={<Login setAdmin={setAdmin} />} />
+            <Route path="/login" element={<UnifiedLogin setAdmin={setAdmin} />} />
             <Route path="/admin" element={
               <PrivateRoute admin={admin}>
                 <AdminPanel setAdmin={setAdmin} />
               </PrivateRoute>
             } />
-            <Route path="/dashboard" element={<ClientDashboard />} />
+            <Route path="/dashboard" element={
+              <PrivateClientRoute>
+                <ClientDashboard />
+              </PrivateClientRoute>
+            } />
             <Route path="/client-login" element={<ClientRegister />} />
           </Routes>
         </main>

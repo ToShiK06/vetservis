@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { auth } from '../firebase';
 import { servicesCollection, getDocs } from '../firebase';
 import BookingModal from '../components/BookingModal';
 
@@ -61,6 +62,13 @@ function Services() {
   });
 
   const handleBookService = (service) => {
+    // Проверка авторизации
+    const user = auth.currentUser;
+    if (!user) {
+      alert('Для записи на услугу необходимо войти в аккаунт');
+      window.location.href = '/login';
+      return;
+    }
     setSelectedService(service);
     setShowModal(true);
   };
@@ -90,7 +98,6 @@ function Services() {
       </Helmet>
 
       <div className="servicesPageModern">
-        {/* Hero секция */}
         <div className="servicesHeroModern">
           <div className="servicesHeroContentModern">
             <h1 className="servicesHeroTitleModern">Наши услуги</h1>
@@ -98,7 +105,6 @@ function Services() {
           </div>
         </div>
 
-        {/* Поиск и фильтры */}
         <div className="servicesFilterModern">
           <div className="searchBoxModern">
             <svg className="searchIconModern" width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -129,7 +135,6 @@ function Services() {
           </div>
         </div>
 
-        {/* Сетка услуг */}
         {loading ? (
           <div className="loadingServicesModern">Загрузка услуг...</div>
         ) : filteredServices.length === 0 ? (
@@ -171,7 +176,6 @@ function Services() {
           </div>
         )}
 
-        {/* CTA Блок */}
         <div className="servicesCtaModern">
           <div className="servicesCtaContentModern">
             <h2>Не нашли нужную услугу?</h2>

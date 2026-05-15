@@ -4764,3 +4764,153 @@ html {
   }
 }
 
+/* Unified Login */
+.unifiedLoginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #F6FAFD;
+  padding: 40px 20px;
+}
+
+.unifiedLoginCard {
+  background: white;
+  border-radius: 30px;
+  padding: 50px 40px;
+  max-width: 450px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(10, 25, 49, 0.1);
+}
+
+.unifiedLoginHeader {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.unifiedLoginLogo {
+  margin-bottom: 20px;
+}
+
+.unifiedLoginTitle {
+  color: #0A1931;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.unifiedLoginSubtitle {
+  color: #1A3D63;
+  font-size: 14px;
+}
+
+.unifiedLoginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.unifiedInputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.unifiedInputLabel {
+  color: #0A1931;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.unifiedInput {
+  padding: 14px 16px;
+  border: 2px solid #B3CFE5;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s;
+  background: #F6FAFD;
+}
+
+.unifiedInput:focus {
+  outline: none;
+  border-color: #4A7FA7;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(74, 127, 167, 0.1);
+}
+
+.unifiedLoginButton {
+  padding: 14px;
+  background: #1A3D63;
+  color: white;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.unifiedLoginButton:hover {
+  background: #4A7FA7;
+  transform: translateY(-2px);
+}
+
+.unifiedLoginButton:disabled {
+  background: #B3CFE5;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.unifiedError {
+  background: #dc3545;
+  color: white;
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.unifiedLoginFooter {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.unifiedLoginFooter p {
+  color: #1A3D63;
+  font-size: 14px;
+}
+
+.unifiedLoginFooter a {
+  color: #4A7FA7;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.unifiedLoginFooter a:hover {
+  text-decoration: underline;
+}
+
+.unifiedBackBtn {
+  background: none;
+  border: none;
+  color: #4A7FA7;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 15px;
+  transition: color 0.3s;
+}
+
+.unifiedBackBtn:hover {
+  color: #1A3D63;
+}
+
+@media (max-width: 480px) {
+  .unifiedLoginCard {
+    padding: 35px 25px;
+  }
+  
+  .unifiedLoginTitle {
+    font-size: 24px;
+  }
+}

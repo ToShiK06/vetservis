@@ -17,7 +17,6 @@ function Header({ admin, setAdmin }) {
     window.addEventListener('scroll', handleScroll);
     setActiveLink(location.pathname);
     
-    // Следим за состоянием клиента (обычный пользователь, НЕ админ)
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user && user.email !== 'admin@vetmaster.com') {
         setClient(user);
@@ -47,10 +46,10 @@ function Header({ admin, setAdmin }) {
   };
 
   const navLinks = [
-    { to: '/', label: 'Главная',  },
-    { to: '/services', label: 'Услуги',  },
-    { to: '/contacts', label: 'Контакты',  },
-    { to: '/about', label: 'О нас',  }
+    { to: '/', label: 'Главная' },
+    { to: '/services', label: 'Услуги' },
+    { to: '/contacts', label: 'Контакты' },
+    { to: '/about', label: 'О нас' }
   ];
 
   return (
@@ -86,13 +85,11 @@ function Header({ admin, setAdmin }) {
                 className={`luxuryNavLink ${activeLink === link.to ? 'active' : ''}`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <span className="luxuryNavIcon">{link.icon}</span>
                 <span className="luxuryNavLabel">{link.label}</span>
                 <span className="luxuryNavGlow"></span>
               </Link>
             ))}
             
-            {/* ТОЛЬКО ДЛЯ АДМИНА */}
             {admin && (
               <>
                 <Link to="/admin" className="luxuryNavLink adminSpecial" onClick={() => setIsMobileMenuOpen(false)}>
@@ -110,7 +107,6 @@ function Header({ admin, setAdmin }) {
               </>
             )}
             
-            {/* ТОЛЬКО ДЛЯ КЛИЕНТОВ (НЕ АДМИН) */}
             {!admin && client && (
               <>
                 <Link to="/dashboard" className="luxuryNavLink" onClick={() => setIsMobileMenuOpen(false)}>
@@ -128,16 +124,13 @@ function Header({ admin, setAdmin }) {
               </>
             )}
             
-            {/* ЕСЛИ НЕТ НИ АДМИНА, НИ КЛИЕНТА */}
             {!admin && !client && (
-              <div className="luxuryAuthButtons">
-                <Link to="/client-login" className="luxuryButton luxuryButtonSecondary">
-                  <span>Вход для клиентов</span>
-                </Link>
-                <Link to="/login" className="luxuryButton luxuryButtonPrimary">
-                  <span>Администратор</span>
-                </Link>
-              </div>
+              <Link to="/login" className="luxuryButton luxuryButtonPrimary">
+                <span>Вход</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </Link>
             )}
           </nav>
 

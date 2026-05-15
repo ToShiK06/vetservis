@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { addDoc, petsCollection } from '../firebase';
+import { auth } from '../firebase';
 
 function PetPassportForm({ onPetAdded }) {
   const [formData, setFormData] = useState({
@@ -16,6 +17,27 @@ function PetPassportForm({ onPetAdded }) {
 
   const [phoneError, setPhoneError] = useState('');
   const [nameError, setNameError] = useState('');
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Проверяем авторизацию пользователя
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      if (!currentUser) {
+        alert('Для создания паспорта необходимо войти в аккаунт');
+        window.location.href = '/login';
+      } else {
+        setUser(currentUser);
+        // Автоматически заполняем данные владельца из аккаунта
+        setFormData(prev => ({
+          ...prev,
+          ownerName: currentUser.displayName || '',
+          ownerPhone: '',
+          ownerAddress: ''
+        }));
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const animalTypes = [
     'Собака', 'Кошка', 'Попугай', 'Хомяк', 'Морская свинка',
@@ -23,39 +45,27 @@ function PetPassportForm({ onPetAdded }) {
     'Крыса', 'Мышь', 'Енот', 'Лиса', 'Другое'
   ];
 
-  // Нормализация номера телефона в формат +7XXXXXXXXXX
   const normalizePhone = (phone) => {
     if (!phone) return '';
-    // Удаляем все пробелы, скобки, дефисы, плюсы
     let cleaned = phone.replace(/[\s\(\)\-]/g, '');
-    // Убираем плюс если есть
     cleaned = cleaned.replace('+', '');
     
-    // Если начинается с 8, заменяем на +7
     if (cleaned.startsWith('8')) {
       cleaned = '+7' + cleaned.slice(1);
-    }
-    // Если начинается с 7, добавляем +
-    else if (cleaned.startsWith('7')) {
+    } else if (cleaned.startsWith('7')) {
       cleaned = '+' + cleaned;
-    }
-    // Если начинается с 9 (мобильный без кода страны)
-    else if (cleaned.startsWith('9')) {
+    } else if (cleaned.startsWith('9')) {
       cleaned = '+7' + cleaned;
-    }
-    // Если не начинается с +, добавляем
-    else if (!cleaned.startsWith('+')) {
+    } else if (!cleaned.startsWith('+')) {
       cleaned = '+' + cleaned;
     }
     
     return cleaned;
   };
 
-  // Валидация номера телефона
   const validatePhone = (phone) => {
     if (!phone) return 'Поле обязательно для заполнения';
     const normalized = normalizePhone(phone);
-    // Проверяем формат +7XXXXXXXXXX (11 цифр после +7)
     const phoneRegex = /^\+\d{1,3}\d{10}$/;
     if (!phoneRegex.test(normalized)) {
       return 'Введите корректный номер телефона (например: +79123456789)';
@@ -119,6 +129,14 @@ function PetPassportForm({ onPetAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Дополнительная проверка авторизации
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      alert('Для создания паспорта необходимо войти в аккаунт');
+      window.location.href = '/login';
+      return;
+    }
+    
     const phoneValid = !validatePhone(formData.ownerPhone);
     const nameValid = !validateName(formData.ownerName);
     
@@ -140,7 +158,6 @@ function PetPassportForm({ onPetAdded }) {
     }
 
     try {
-      // Нормализуем телефон перед сохранением
       const normalizedPhone = normalizePhone(formData.ownerPhone);
       
       await addDoc(petsCollection, {
@@ -150,10 +167,12 @@ function PetPassportForm({ onPetAdded }) {
         petAge: formData.petAge.trim(),
         petColor: formData.petColor.trim(),
         ownerName: formData.ownerName.trim(),
-        ownerPhone: normalizedPhone,  // Сохраняем в нормализованном формате
+        ownerPhone: normalizedPhone,
         ownerAddress: formData.ownerAddress.trim(),
         medicalNotes: formData.medicalNotes.trim(),
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        createdBy: currentUser.uid,
+        createdByEmail: currentUser.email
       });
       
       alert('Паспорт питомца успешно создан');
@@ -164,7 +183,7 @@ function PetPassportForm({ onPetAdded }) {
         petBreed: '',
         petAge: '',
         petColor: '',
-        ownerName: '',
+        ownerName: currentUser.displayName || '',
         ownerPhone: '',
         ownerAddress: '',
         medicalNotes: ''
@@ -178,6 +197,18 @@ function PetPassportForm({ onPetAdded }) {
       alert('Ошибка при создании паспорта: ' + error.message);
     }
   };
+
+  // Если пользователь не авторизован, показываем сообщение
+  if (!user) {
+    return (
+      <div className="loginRequiredCard">
+        <p>Для создания паспорта питомца необходимо войти в аккаунт</p>
+        <button className="loginRequiredBtn" onClick={() => window.location.href = '/login'}>
+          Войти в аккаунт
+        </button>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit}>
