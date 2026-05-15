@@ -5334,6 +5334,7 @@ body::before {
 
 .adminContainer {
   max-width: 1200px;
+  margin: 100px auto 40px;
   padding: 35px;
   background: transparent;
   position: relative;
@@ -5449,3 +5450,4 @@ body::before {
 .adminContainer .formTextarea:focus {
   background: white;
 }
+
