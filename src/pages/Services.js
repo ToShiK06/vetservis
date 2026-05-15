@@ -62,7 +62,6 @@ function Services() {
   });
 
   const handleBookService = (service) => {
-    // Проверка авторизации
     const user = auth.currentUser;
     if (!user) {
       alert('Для записи на услугу необходимо войти в аккаунт');
@@ -98,10 +97,22 @@ function Services() {
       </Helmet>
 
       <div className="servicesPageModern">
-        <div className="servicesHeroModern">
-          <div className="servicesHeroContentModern">
-            <h1 className="servicesHeroTitleModern">Наши услуги</h1>
-            <p className="servicesHeroSubtitleModern">Профессиональная помощь вашим питомцам</p>
+        {/* Красивая шапка с местом для фото */}
+        <div className="servicesHeroElegant">
+          <div className="servicesHeroElegantPattern"></div>
+          <div className="servicesHeroElegantContent">
+            <div className="servicesHeroElegantText">
+              <span className="servicesHeroElegantBadge">Ветеринарная клиника</span>
+              <h1 className="servicesHeroElegantTitle">Наши услуги</h1>
+              <div className="servicesHeroElegantDivider"></div>
+              <p className="servicesHeroElegantDesc">
+                Профессиональная помощь и забота о здоровье ваших питомцев
+              </p>
+            </div>
+            
+            
+          </div>
+          <div className="servicesHeroElegantStats">
           </div>
         </div>
 
