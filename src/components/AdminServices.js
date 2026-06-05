@@ -10,7 +10,8 @@ function AdminServices() {
     price: '',
     description: '',
     category: '',
-    duration: '30'
+    duration: '30',
+    status: 'active'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,6 +26,12 @@ function AdminServices() {
     'Другое'
   ];
 
+  const statuses = [
+    { value: 'active', label: 'Активна', color: '#28a745' },
+    { value: 'pending', label: 'Ожидание', color: '#ffc107' },
+    { value: 'inactive', label: 'Неактивна', color: '#dc3545' }
+  ];
+
   useEffect(() => {
     loadServices();
   }, []);
@@ -33,6 +40,10 @@ function AdminServices() {
     try {
       const snapshot = await getDocs(servicesCollection);
       const servicesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      servicesData.sort((a, b) => {
+        const statusOrder = { active: 1, pending: 2, inactive: 3 };
+        return (statusOrder[a.status] || 2) - (statusOrder[b.status] || 2);
+      });
       setServices(servicesData);
     } catch (error) {
       console.error('Ошибка загрузки:', error);
@@ -69,7 +80,8 @@ function AdminServices() {
         price: '',
         description: '',
         category: '',
-        duration: '30'
+        duration: '30',
+        status: 'active'
       });
       setEditingService(null);
       await loadServices();
@@ -88,7 +100,8 @@ function AdminServices() {
       price: service.price,
       description: service.description || '',
       category: service.category || '',
-      duration: service.duration || '30'
+      duration: service.duration || '30',
+      status: service.status || 'active'
     });
   };
 
@@ -99,6 +112,11 @@ function AdminServices() {
     }
   };
 
+  const handleStatusChange = async (serviceId, newStatus) => {
+    await updateDoc(doc(db, 'services', serviceId), { status: newStatus });
+    await loadServices();
+  };
+
   const handleCancel = () => {
     setEditingService(null);
     setFormData({
@@ -106,8 +124,22 @@ function AdminServices() {
       price: '',
       description: '',
       category: '',
-      duration: '30'
+      duration: '30',
+      status: 'active'
     });
+  };
+
+  const getStatusBadge = (status) => {
+    switch(status) {
+      case 'active':
+        return <span className="serviceStatusBadge active">Активна</span>;
+      case 'pending':
+        return <span className="serviceStatusBadge pending">Ожидание</span>;
+      case 'inactive':
+        return <span className="serviceStatusBadge inactive">Неактивна</span>;
+      default:
+        return <span className="serviceStatusBadge pending">Ожидание</span>;
+    }
   };
 
   return (
@@ -177,6 +209,23 @@ function AdminServices() {
             </div>
           </div>
           
+          <div className="formRow">
+            <div className="formGroup">
+              <label className="formLabel">Статус</label>
+              <select
+                name="status"
+                className="formInput"
+                value={formData.status}
+                onChange={handleChange}
+              >
+                {statuses.map(status => (
+                  <option key={status.value} value={status.value}>{status.label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="formGroup"></div>
+          </div>
+          
           <div className="formGroup">
             <label className="formLabel">Описание</label>
             <textarea
@@ -217,6 +266,7 @@ function AdminServices() {
                   <th>Цена</th>
                   <th>Категория</th>
                   <th>Длительность</th>
+                  <th>Статус</th>
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -230,6 +280,17 @@ function AdminServices() {
                     <td className="servicePriceCell">{service.price}</td>
                     <td>{service.category || '-'}</td>
                     <td>{service.duration} мин</td>
+                    <td>
+                      <select
+                        className={`statusSelect ${service.status || 'pending'}`}
+                        value={service.status || 'pending'}
+                        onChange={(e) => handleStatusChange(service.id, e.target.value)}
+                      >
+                        <option value="active">Активна</option>
+                        <option value="pending">Ожидание</option>
+                        <option value="inactive">Неактивна</option>
+                      </select>
+                    </td>
                     <td className="serviceActionsCell">
                       <button className="editServiceBtn" onClick={() => handleEdit(service)}>
                         Редактировать

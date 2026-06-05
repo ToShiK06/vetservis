@@ -5451,3 +5451,1202 @@ body::before {
   background: white;
 }
 
+/* About Page Simple - с анимациями */
+.aboutPageSimple {
+  position: relative;
+  z-index: 2;
+  background: #F6FAFD;
+  min-height: 100vh;
+}
+
+/* Hero секция - анимация */
+.aboutHeroSimple {
+  background: linear-gradient(135deg, #0A1931 0%, #1A3D63 100%);
+  padding: 80px 20px 60px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: all 0.8s ease;
+}
+
+.aboutHeroSimple.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* О нас - анимация */
+.aboutInfoSimple {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.8s ease;
+}
+
+.aboutInfoSimple.animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* FAQ - анимация */
+.aboutFaqSimple {
+  background: white;
+  padding: 60px 20px;
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all 0.8s ease;
+}
+
+.aboutFaqSimple.animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Контакты - анимация */
+.aboutContactSimple {
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #1A3D63, #0A1931);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.aboutContactSimple.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Карточки преимуществ - анимация при появлении */
+.featureItemSimple {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #F6FAFD;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #1A3D63;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.5s ease;
+}
+
+.aboutInfoSimple.animate .featureItemSimple {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.aboutInfoSimple.animate .featureItemSimple:nth-child(1) { transition-delay: 0.1s; }
+.aboutInfoSimple.animate .featureItemSimple:nth-child(2) { transition-delay: 0.2s; }
+.aboutInfoSimple.animate .featureItemSimple:nth-child(3) { transition-delay: 0.3s; }
+.aboutInfoSimple.animate .featureItemSimple:nth-child(4) { transition-delay: 0.4s; }
+
+/* FAQ анимация элементов */
+.faqItemSimple {
+  border: 1px solid #B3CFE5;
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.aboutFaqSimple.animate .faqItemSimple {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.aboutFaqSimple.animate .faqItemSimple:nth-child(1) { transition-delay: 0.05s; }
+.aboutFaqSimple.animate .faqItemSimple:nth-child(2) { transition-delay: 0.1s; }
+.aboutFaqSimple.animate .faqItemSimple:nth-child(3) { transition-delay: 0.15s; }
+.aboutFaqSimple.animate .faqItemSimple:nth-child(4) { transition-delay: 0.2s; }
+.aboutFaqSimple.animate .faqItemSimple:nth-child(5) { transition-delay: 0.25s; }
+.aboutFaqSimple.animate .faqItemSimple:nth-child(6) { transition-delay: 0.3s; }
+
+/* Анимация контактов */
+.contactItemSimple {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 0;
+  color: white;
+  font-size: 15px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.5s ease;
+}
+
+.aboutContactSimple.animate .contactItemSimple {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.aboutContactSimple.animate .contactItemSimple:nth-child(1) { transition-delay: 0.1s; }
+.aboutContactSimple.animate .contactItemSimple:nth-child(2) { transition-delay: 0.2s; }
+.aboutContactSimple.animate .contactItemSimple:nth-child(3) { transition-delay: 0.3s; }
+.aboutContactSimple.animate .contactItemSimple:nth-child(4) { transition-delay: 0.4s; }
+
+/* Анимация кнопки */
+.aboutContactBtnSimple {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 35px;
+  background: white;
+  color: #1A3D63;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.5s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.aboutContactSimple.animate .aboutContactBtnSimple {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.5s;
+}
+
+.aboutContactBtnSimple:hover {
+  transform: translateY(-3px);
+  gap: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Анимация стрелки FAQ */
+.faqArrowSimple {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #4A7FA7;
+}
+
+.faqArrowSimple.rotate {
+  transform: rotate(180deg);
+}
+
+/* Анимация ответа FAQ */
+.faqAnswerSimple {
+  max-height: 0;
+  padding: 0 24px;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faqItemSimple.open .faqAnswerSimple {
+  max-height: 300px;
+  padding: 0 24px 24px 24px;
+}
+
+/* Остальные стили без изменений */
+.aboutHeroTitleSimple {
+  font-size: 48px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.aboutHeroDividerSimple {
+  width: 60px;
+  height: 3px;
+  background: #4A7FA7;
+  margin: 0 auto 20px;
+}
+
+.aboutHeroDescSimple {
+  font-size: 16px;
+  color: #B3CFE5;
+  margin-bottom: 10px;
+}
+
+.aboutHeroOwnerSimple {
+  font-size: 14px;
+  color: #8AAEE0;
+}
+
+.aboutInfoContainerSimple {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.aboutInfoTextSimple h2 {
+  font-size: 28px;
+  color: #0A1931;
+  margin-bottom: 20px;
+}
+
+.aboutInfoTextSimple p {
+  color: #1A3D63;
+  line-height: 1.7;
+  margin-bottom: 15px;
+}
+
+.aboutFaqContainerSimple {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.aboutFaqContainerSimple h2 {
+  font-size: 32px;
+  color: #0A1931;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.faqListSimple {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.faqQuestionSimple {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0A1931;
+  text-align: left;
+  transition: all 0.3s;
+}
+
+.faqQuestionSimple:hover {
+  background: #F6FAFD;
+}
+
+.faqAnswerSimple p {
+  color: #1A3D63;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.aboutContactContainerSimple {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.aboutContactContainerSimple h2 {
+  font-size: 32px;
+  color: white;
+  margin-bottom: 30px;
+}
+
+.contactItemsSimple {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.contactLabelSimple {
+  font-weight: 600;
+  color: #4A7FA7;
+}
+
+.featureIconSimple {
+  width: 24px;
+  height: 24px;
+  background: #1A3D63;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .aboutInfoContainerSimple {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 25px;
+  }
+  
+  .aboutHeroTitleSimple {
+    font-size: 36px;
+  }
+  
+  .aboutFaqContainerSimple h2 {
+    font-size: 28px;
+  }
+  
+  .aboutContactContainerSimple h2 {
+    font-size: 28px;
+  }
+  
+  .faqQuestionSimple {
+    font-size: 14px;
+    padding: 15px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .aboutHeroTitleSimple {
+    font-size: 28px;
+  }
+  
+  .contactItemSimple {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+/* Статусы услуг */
+.serviceStatusBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.serviceStatusBadge.active {
+  background-color: #28a745;
+  color: white;
+}
+
+.serviceStatusBadge.pending {
+  background-color: #ffc107;
+  color: #0A1931;
+}
+
+.serviceStatusBadge.inactive {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Select статуса в таблице */
+.statusSelect {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #B3CFE5;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: white;
+}
+
+.statusSelect.active {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.statusSelect.pending {
+  background-color: #ffc107;
+  color: #0A1931;
+  border-color: #ffc107;
+}
+
+.statusSelect.inactive {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+/* Статусы записей */
+.requestStatusBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.requestStatusBadge.confirmed {
+  background-color: #28a745;
+  color: white;
+}
+
+.requestStatusBadge.pending {
+  background-color: #ffc107;
+  color: #0A1931;
+}
+
+.requestStatusBadge.completed {
+  background-color: #4A7FA7;
+  color: white;
+}
+
+.requestStatusBadge.cancelled {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Select статуса в карточке записи */
+.statusSelectRequest {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #B3CFE5;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: white;
+}
+
+.statusSelectRequest.pending {
+  background-color: #ffc107;
+  color: #0A1931;
+  border-color: #ffc107;
+}
+
+.statusSelectRequest.confirmed {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.statusSelectRequest.completed {
+  background-color: #4A7FA7;
+  color: white;
+  border-color: #4A7FA7;
+}
+
+.statusSelectRequest.cancelled {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+/* Фильтры */
+.filterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filterBtn {
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #B3CFE5;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1A3D63;
+  transition: all 0.3s;
+}
+
+.filterBtn:hover {
+  background: #4A7FA7;
+  color: white;
+  border-color: #4A7FA7;
+}
+
+.filterBtn.active {
+  background: #1A3D63;
+  color: white;
+  border-color: #1A3D63;
+}
+
+
+
+/* ===== АНИМАЦИИ ДЛЯ СТРАНИЦЫ УСЛУГ ===== */
+.servicesPageAnimated {
+  min-height: 100vh;
+  background: #F6FAFD;
+}
+
+/* Hero анимация */
+.servicesHeroAnimated {
+  background: linear-gradient(135deg, #0A1931 0%, #1A3D63 100%);
+  padding: 80px 20px 60px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.servicesHeroAnimated.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.servicesHeroTitleAnimated {
+  font-size: 48px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 20px;
+  animation: fadeInDown 0.6s ease;
+}
+
+.servicesHeroDividerAnimated {
+  width: 60px;
+  height: 3px;
+  background: #4A7FA7;
+  margin: 0 auto 20px;
+  animation: scaleIn 0.6s ease 0.2s both;
+}
+
+.servicesHeroSubtitleAnimated {
+  font-size: 18px;
+  color: #B3CFE5;
+  animation: fadeInUp 0.6s ease 0.3s both;
+}
+
+/* Анимация фильтров */
+.servicesFilterAnimated {
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding: 0 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+
+.servicesFilterAnimated.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.searchBoxAnimated {
+  position: relative;
+  max-width: 500px;
+  margin: 0 auto 30px;
+  animation: fadeIn 0.5s ease;
+}
+
+.searchInputAnimated {
+  width: 100%;
+  padding: 14px 20px 14px 48px;
+  border: 2px solid #B3CFE5;
+  border-radius: 50px;
+  font-size: 15px;
+  background: white;
+  transition: all 0.3s;
+}
+
+.searchInputAnimated:focus {
+  outline: none;
+  border-color: #4A7FA7;
+  box-shadow: 0 0 0 3px rgba(74, 127, 167, 0.1);
+}
+
+.searchIconAnimated {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4A7FA7;
+}
+
+.searchClearAnimated {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #B3CFE5;
+  transition: color 0.3s;
+}
+
+.searchClearAnimated:hover {
+  color: #dc3545;
+}
+
+.filterContainerAnimated {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.filterChipAnimated {
+  padding: 8px 20px;
+  background: white;
+  border: 1px solid #B3CFE5;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1A3D63;
+  transition: all 0.3s;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.4s forwards;
+}
+
+.filterChipAnimated:hover {
+  background: #4A7FA7;
+  color: white;
+  border-color: #4A7FA7;
+  transform: translateY(-2px);
+}
+
+.filterChipAnimated.active {
+  background: #1A3D63;
+  color: white;
+  border-color: #1A3D63;
+}
+
+/* Сетка услуг */
+.servicesGridAnimated {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.serviceCardAnimated {
+  background: white;
+  border-radius: 20px;
+  padding: 28px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.serviceCardAnimated.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.serviceCardAnimated:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(10, 25, 49, 0.15);
+}
+
+.serviceCardHeaderAnimated {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #B3CFE5;
+}
+
+.serviceNameAnimated {
+  color: #0A1931;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.servicePriceAnimated {
+  color: #4A7FA7;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.serviceDurationAnimated {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #B3CFE5;
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+.serviceDescriptionAnimated {
+  color: #1A3D63;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.bookServiceBtnAnimated {
+  width: 100%;
+  padding: 12px;
+  background: #1A3D63;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.bookServiceBtnAnimated:hover {
+  background: #4A7FA7;
+  transform: translateY(-2px);
+  gap: 15px;
+}
+
+/* Загрузка */
+.loadingServicesAnimated {
+  text-align: center;
+  padding: 60px;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #B3CFE5;
+  border-top-color: #4A7FA7;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Ключевые кадры */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+  .servicesHeroTitleAnimated {
+    font-size: 32px;
+  }
+  
+  .servicesGridAnimated {
+    grid-template-columns: 1fr;
+    padding: 15px;
+  }
+  
+  .filterChipAnimated {
+    padding: 6px 16px;
+    font-size: 12px;
+  }
+}
+/* ===== АНИМАЦИИ ДЛЯ СТРАНИЦЫ КОНТАКТОВ ===== */
+.contactsPageAnimated {
+  min-height: 100vh;
+  background: #F6FAFD;
+}
+
+.contactsHeroAnimated {
+  background: linear-gradient(135deg, #0A1931 0%, #1A3D63 100%);
+  padding: 80px 20px 60px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contactsHeroAnimated.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contactsHeroTitleAnimated {
+  font-size: 48px;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.contactsHeroDividerAnimated {
+  width: 60px;
+  height: 3px;
+  background: #4A7FA7;
+  margin: 0 auto 20px;
+  animation: scaleIn 0.6s ease 0.2s both;
+}
+
+.contactsHeroSubtitleAnimated {
+  font-size: 18px;
+  color: #B3CFE5;
+  animation: fadeInUp 0.6s ease 0.3s both;
+}
+
+.contactsInfoAnimated {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contactsInfoAnimated.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contactsGridAnimated {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.contactInfoCardAnimated {
+  background: white;
+  padding: 35px;
+  border-radius: 24px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+  animation: fadeInLeft 0.6s ease;
+}
+
+.contactInfoCardAnimated:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(10, 25, 49, 0.1);
+}
+
+.contactMapCardAnimated {
+  background: white;
+  padding: 35px;
+  border-radius: 24px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contactMapCardAnimated.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.contactSectionTitleAnimated {
+  color: #0A1931;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+.contactItemAnimated {
+  margin-bottom: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid #B3CFE5;
+  animation: fadeInRight 0.5s ease forwards;
+  opacity: 0;
+}
+
+.contactItemAnimated:nth-child(1) { animation-delay: 0.1s; }
+.contactItemAnimated:nth-child(2) { animation-delay: 0.2s; }
+.contactItemAnimated:nth-child(3) { animation-delay: 0.3s; }
+.contactItemAnimated:nth-child(4) { animation-delay: 0.4s; }
+.contactItemAnimated:nth-child(5) { animation-delay: 0.5s; }
+
+.contactItemAnimated strong {
+  color: #0A1931;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.contactItemAnimated p {
+  color: #1A3D63;
+  margin: 5px 0;
+}
+
+.contactItemAnimated a {
+  color: #4A7FA7;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.contactItemAnimated a:hover {
+  color: #1A3D63;
+  text-decoration: underline;
+}
+
+.mapContainerAnimated {
+  margin-top: 15px;
+}
+
+.mapAddressAnimated {
+  color: #4A7FA7;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.mapLinksAnimated {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.mapLinksAnimated a {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #F6FAFD;
+  color: #4A7FA7;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.mapLinksAnimated a:hover {
+  background: #4A7FA7;
+  color: white;
+  transform: translateY(-2px);
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .contactsGridAnimated {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  
+  .contactsHeroTitleAnimated {
+    font-size: 32px;
+  }
+  
+  .contactInfoCardAnimated,
+  .contactMapCardAnimated {
+    padding: 25px;
+  }
+}
+/* ===== АНИМАЦИИ ДЛЯ АДМИН-ПАНЕЛИ ===== */
+.adminContainer {
+  max-width: 1200px;
+  margin: 100px auto 40px;
+  padding: 20px;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Анимация для карточек админки */
+.adminContainer .formSection,
+.adminContainer .petsList,
+.adminContainer .adminServicesSection,
+.adminContainer .adminRequestsSection,
+.adminContainer .adminReviewsSection {
+  animation: slideUp 0.5s ease;
+}
+
+/* Анимация для таблиц */
+.servicesTableWrapper {
+  animation: fadeIn 0.6s ease;
+}
+
+/* Анимация для строк таблицы */
+.servicesTable tbody tr {
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideInRow 0.3s forwards;
+}
+
+.servicesTable tbody tr:nth-child(1) { animation-delay: 0.05s; }
+.servicesTable tbody tr:nth-child(2) { animation-delay: 0.1s; }
+.servicesTable tbody tr:nth-child(3) { animation-delay: 0.15s; }
+.servicesTable tbody tr:nth-child(4) { animation-delay: 0.2s; }
+.servicesTable tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes slideInRow {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Анимация для карточек записей */
+.requestCard {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardFadeIn 0.4s forwards;
+}
+
+.requestCard:nth-child(1) { animation-delay: 0.05s; }
+.requestCard:nth-child(2) { animation-delay: 0.1s; }
+.requestCard:nth-child(3) { animation-delay: 0.15s; }
+.requestCard:nth-child(4) { animation-delay: 0.2s; }
+.requestCard:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes cardFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Анимация для кнопок в админке */
+.adminContainer button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.adminContainer button:hover {
+  transform: translateY(-2px);
+}
+
+/* Анимация для вкладок */
+.adminTabs {
+  animation: fadeIn 0.4s ease;
+}
+
+.tabButton {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tabButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: left 0.3s ease;
+}
+
+.tabButton:hover::before {
+  left: 100%;
+}
+
+/* Анимация для фильтров */
+.filterButtons {
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ===== Стили для формы на странице контактов ===== */
+.contactsFormSectionAnimated {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contactsFormSectionAnimated.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contactsFormContainerAnimated {
+  background: white;
+  border-radius: 30px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(10, 25, 49, 0.1);
+  animation: fadeInUp 0.6s ease;
+}
+
+.contactsFormHeaderAnimated {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.contactsFormHeaderAnimated h2 {
+  font-size: 32px;
+  color: #0A1931;
+  margin-bottom: 10px;
+}
+
+.contactsFormHeaderAnimated p {
+  color: #1A3D63;
+  font-size: 16px;
+}
+
+/* Проверяем, что BookingForm отображается правильно */
+.bookingFormSection {
+  padding: 0;
+  max-width: 100%;
+}
+
+.bookingFormContainer {
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .contactsFormContainerAnimated {
+    padding: 25px;
+  }
+  
+  .contactsFormHeaderAnimated h2 {
+    font-size: 24px;
+  }
+}

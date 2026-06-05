@@ -1,97 +1,140 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import BookingForm from '../components/BookingForm';
 
 function Contacts() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(false);
+  const [mapVisible, setMapVisible] = useState(false);
+  const infoRef = useRef(null);
+  const mapRef = useRef(null);
+  const formRef = useRef(null);
+  const [formVisible, setFormVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    
+    const infoObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setInfoVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    
+    const mapObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setMapVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    const formObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setFormVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (infoRef.current) infoObserver.observe(infoRef.current);
+    if (mapRef.current) mapObserver.observe(mapRef.current);
+    if (formRef.current) formObserver.observe(formRef.current);
+
+    return () => {
+      infoObserver.disconnect();
+      mapObserver.disconnect();
+      formObserver.disconnect();
+    };
+  }, []);
+
   return (
     <>
       <Helmet>
         <title>Контакты | ВетСервис - Ветеринарная клиника в Старой Руссе</title>
-        <meta name="description" content="Контакты ветеринарной клиники ВетСервис в Старой Руссе. Адрес: мкр Городок 10а. Телефон: 8 (911) 601-01-39. Режим работы и схема проезда. Запись на прием онлайн." />
-        <meta name="keywords" content="контакты ветклиники, ветеринарная клиника Старая Русса, телефон ветклиники, адрес, схема проезда" />
-        <meta property="og:title" content="Контакты ВетСервис - Ветеринарная клиника" />
-        <meta property="og:description" content="Как нас найти и связаться с нами. Адрес, телефон, режим работы. Запишитесь на прием онлайн." />
-        <meta property="og:url" content="https://vetservis.vercel.app/contacts" />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary" />
+        <meta name="description" content="Контакты ветеринарной клиники ВетСервис. Адрес: мкр Городок 10а. Телефон: 8 (911) 601-01-39." />
       </Helmet>
 
-      <div className="contactsPage">
-        <div className="pageHeader">
-          <h1 className="pageTitle">Контакты</h1>
-          <p className="pageSubtitle">Свяжитесь с нами любым удобным способом</p>
+      <div className="contactsPageAnimated">
+        {/* Hero секция */}
+        <div className={`contactsHeroAnimated ${isVisible ? 'visible' : ''}`}>
+          <div className="contactsHeroContentAnimated">
+            <h1 className="contactsHeroTitleAnimated">Контакты</h1>
+            <div className="contactsHeroDividerAnimated"></div>
+            <p className="contactsHeroSubtitleAnimated">Свяжитесь с нами любым удобным способом</p>
+          </div>
         </div>
 
-        <div className="contactsGrid">
-          <div className="contactInfo">
-            <h2 className="contactSectionTitle">Контактная информация</h2>
-            
-            <div className="contactItem">
-              <strong> Адрес:</strong>
-              <p>г. Старая Русса, мкр Городок 10а</p>
-            </div>
-            
-            <div className="contactItem">
-              <strong> Телефон:</strong>
-              <p><a href="tel:+79116010139" style={{ color: '#4A7FA7', textDecoration: 'none' }}>8 (911) 601-01-39</a></p>
-            </div>
-            
-            <div className="contactItem">
-              <strong> Email:</strong>
-              <p><a href="mailto:info@vetservice.ru" style={{ color: '#4A7FA7', textDecoration: 'none' }}>info@vetservice.ru</a></p>
-            </div>
-            
-            <div className="contactItem">
-              <strong>Режим работы:</strong>
-              <p>Понедельник - Суббота: 9:00 - 21:00</p>
-              <p>Воскресенье: 10:00 - 18:00</p>
+        {/* Информация */}
+        <div ref={infoRef} className={`contactsInfoAnimated ${infoVisible ? 'visible' : ''}`}>
+          <div className="contactsGridAnimated">
+            <div className="contactInfoCardAnimated">
+              <h2 className="contactSectionTitleAnimated">Контактная информация</h2>
+              
+              <div className="contactItemAnimated">
+                <strong>Адрес:</strong>
+                <p>г. Старая Русса, мкр Городок 10а</p>
+              </div>
+              
+              <div className="contactItemAnimated">
+                <strong>Телефон:</strong>
+                <p><a href="tel:+79116010139">8 (911) 601-01-39</a></p>
+              </div>
+              
+              <div className="contactItemAnimated">
+                <strong>Email:</strong>
+                <p><a href="mailto:info@vetservice.ru">info@vetservice.ru</a></p>
+              </div>
+              
+              <div className="contactItemAnimated">
+                <strong>Режим работы:</strong>
+                <p>Понедельник - Суббота: 9:00 - 21:00</p>
+                <p>Воскресенье: 10:00 - 18:00</p>
+              </div>
+
+              <div className="contactItemAnimated">
+                <strong>Рейтинг:</strong>
+                <p>5.0 на основе отзывов</p>
+              </div>
             </div>
 
-            <div className="contactItem">
-              <strong> Рейтинг:</strong>
-              <p>5.0 на основе отзывов</p>
-              <p>91 подписчик · 6 друзей</p>
-            </div>
-          </div>
-
-          <div className="contactMap">
-            <h2 className="contactSectionTitle">Как нас найти</h2>
-            <div className="mapContainer">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d573.9480662052816!2d31.360799747312818!3d57.974033380510214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sru!2sru!4v1777025530364!5m2!1sru!2sru" 
-                width="100%" 
-                height="350" 
-                style={{ border: 0, borderRadius: '12px' }} 
-                allowFullScreen 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Карта клиники ВетСервис в Старой Руссе"
-              ></iframe>
-              <p className="mapAddress"> Микрорайон Городок, 10А, г. Старая Русса</p>
-            </div>
-            <div className="mapLinks">
-              <a 
-                href="https://yandex.ru/maps/?text=Старая+Русса+Городок+10а" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="mapLink"
-              >
-                Построить маршрут в Яндекс.Картах
-              </a>
-              <a 
-                href="https://www.google.com/maps/dir//57.974033,31.360799" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="mapLink"
-              >
-                Построить маршрут в Google Maps
-              </a>
+            <div ref={mapRef} className={`contactMapCardAnimated ${mapVisible ? 'visible' : ''}`}>
+              <h2 className="contactSectionTitleAnimated">Как нас найти</h2>
+              <div className="mapContainerAnimated">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d573.9480662052816!2d31.360799747312818!3d57.974033380510214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sru!2sru!4v1777025530364!5m2!1sru!2sru" 
+                  width="100%" 
+                  height="350" 
+                  style={{ border: 0, borderRadius: '16px' }} 
+                  allowFullScreen 
+                  loading="lazy" 
+                  title="Карта клиники ВетСервис"
+                ></iframe>
+                <p className="mapAddressAnimated">Микрорайон Городок, 10А, г. Старая Русса</p>
+                <div className="mapLinksAnimated">
+                  <a href="https://yandex.ru/maps/?text=Старая+Русса+Городок+10а" target="_blank" rel="noopener noreferrer">
+                    Построить маршрут
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         
-        {/* Форма бронирования */}
-        <BookingForm />
+        {/* Форма записи */}
+        <div ref={formRef} className={`contactsFormSectionAnimated ${formVisible ? 'visible' : ''}`}>
+          <div className="contactsFormContainerAnimated">
+            <div className="contactsFormHeaderAnimated">
+              <h2>Запись на прием</h2>
+              <p>Заполните форму и мы свяжемся с вами</p>
+            </div>
+            <BookingForm />
+          </div>
+        </div>
       </div>
     </>
   );

@@ -72,7 +72,7 @@ function Header({ admin, setAdmin }) {
               <div className="luxuryLogoPulse"></div>
             </div>
             <div className="luxuryLogoText">
-              <span className="luxuryLogoMain">ВетСервис</span>
+              <span className="luxuryLogoMain">ВетМастер</span>
               <span className="luxuryLogoSub">Ветеринарный кабинет</span>
             </div>
           </Link>

@@ -14,7 +14,6 @@ function Footer() {
       
       <div className="luxuryFooterContainer">
         <div className="luxuryFooterGrid">
-          {/* Колонка 1 - О компании */}
           <div className="luxuryFooterCol">
             <div className="luxuryFooterLogo">
               <div className="luxuryFooterLogoIcon">
@@ -89,7 +88,7 @@ function Footer() {
                   <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
                   <polyline points="12 6 12 12 16 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span>Пн-Сб: 9:00 - 21:00, Вс: 10:00 - 18:00</span>
+                <span>Пн-пт: 9:00 - 20:00, Сб: 10:00 - 18:00, Вс: выходной.</span>
               </div>
             </div>
           </div>

@@ -13,6 +13,25 @@ function Services() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState(['all']);
   const cardsRef = useRef([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const heroObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (heroRef.current) {
+      heroObserver.observe(heroRef.current);
+    }
+
+    return () => heroObserver.disconnect();
+  }, []);
 
   useEffect(() => {
     loadServices();
@@ -40,7 +59,9 @@ function Services() {
   const loadServices = async () => {
     try {
       const snapshot = await getDocs(servicesCollection);
-      const servicesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      let servicesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // Показываем только активные услуги
+      servicesData = servicesData.filter(service => service.status === 'active');
       setServices(servicesData);
       
       const uniqueCategories = ['all', ...new Set(servicesData.map(s => s.category).filter(c => c))];
@@ -76,69 +97,48 @@ function Services() {
     setSearchQuery('');
   };
 
-  const defaultServices = [
-    { name: 'Прием терапевта', price: 'от 1000 ₽', description: 'Осмотр, диагностика, назначение лечения. Опытные врачи с 10-летним стажем.', duration: '30 мин', category: 'Диагностика' },
-    { name: 'Вакцинация', price: 'от 800 ₽', description: 'Прививки для кошек и собак. Только импортные вакцины.', duration: '20 мин', category: 'Вакцинация' },
-    { name: 'Лаборатория', price: 'от 500 ₽', description: 'Анализы крови, мочи, цитология. Быстрые результаты.', duration: '15 мин', category: 'Лаборатория' },
-    { name: 'УЗИ диагностика', price: 'от 1500 ₽', description: 'Ультразвуковое исследование органов. Расшифровка сразу.', duration: '30 мин', category: 'Диагностика' },
-    { name: 'Стоматология', price: 'от 2000 ₽', description: 'Лечение зубов и полости рта. Профессиональная чистка.', duration: '45 мин', category: 'Стоматология' },
-    { name: 'Выезд на дом', price: 'от 1500 ₽', description: 'Ветеринарная помощь на дому. Экономия вашего времени.', duration: '60 мин', category: 'Уход' },
-    { name: 'Хирургия', price: 'от 5000 ₽', description: 'Операции любой сложности. Современная анестезия.', duration: '90 мин', category: 'Хирургия' },
-    { name: 'Лечение', price: 'от 1000 ₽', description: 'Комплексное лечение заболеваний любой сложности.', duration: '30 мин', category: 'Лечение' }
-  ];
-
-  const displayServices = services.length > 0 ? services : defaultServices;
-
   return (
     <>
       <Helmet>
         <title>Услуги | ВетСервис - Ветеринарная клиника в Старой Руссе</title>
-        <meta name="description" content="Услуги ветеринарной клиники ВетСервис: прием терапевта, вакцинация, хирургия, УЗИ-диагностика, лабораторные анализы. Доступные цены от 500 ₽." />
+        <meta name="description" content="Услуги ветеринарной клиники ВетСервис: прием терапевта, вакцинация, хирургия, УЗИ-диагностика." />
       </Helmet>
 
-      <div className="servicesPageModern">
-        {/* Красивая шапка с местом для фото */}
-        <div className="servicesHeroElegant">
-          <div className="servicesHeroElegantPattern"></div>
-          <div className="servicesHeroElegantContent">
-            <div className="servicesHeroElegantText">
-              <span className="servicesHeroElegantBadge">Ветеринарная клиника</span>
-              <h1 className="servicesHeroElegantTitle">Наши услуги</h1>
-              <div className="servicesHeroElegantDivider"></div>
-              <p className="servicesHeroElegantDesc">
-                Профессиональная помощь и забота о здоровье ваших питомцев
-              </p>
-            </div>
-            
-            
-          </div>
-          <div className="servicesHeroElegantStats">
+      <div className="servicesPageAnimated">
+        {/* Hero секция с анимацией */}
+        <div ref={heroRef} className={`servicesHeroAnimated ${isVisible ? 'visible' : ''}`}>
+          <div className="servicesHeroContentAnimated">
+            <h1 className="servicesHeroTitleAnimated">Наши услуги</h1>
+            <div className="servicesHeroDividerAnimated"></div>
+            <p className="servicesHeroSubtitleAnimated">Профессиональная помощь вашим питомцам</p>
           </div>
         </div>
 
-        <div className="servicesFilterModern">
-          <div className="searchBoxModern">
-            <svg className="searchIconModern" width="20" height="20" viewBox="0 0 24 24" fill="none">
-              <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        {/* Поиск и фильтры с анимацией */}
+        <div className={`servicesFilterAnimated ${isVisible ? 'visible' : ''}`}>
+          <div className="searchBoxAnimated">
+            <svg className="searchIconAnimated" width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" strokeWidth="2"/>
             </svg>
             <input
               type="text"
-              className="searchInputModern"
+              className="searchInputAnimated"
               placeholder="Поиск услуги..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
-              <button className="searchClearModern" onClick={clearSearch}>✕</button>
+              <button className="searchClearAnimated" onClick={clearSearch}>✕</button>
             )}
           </div>
 
-          <div className="filterContainerModern">
-            {categories.map(cat => (
+          <div className="filterContainerAnimated">
+            {categories.map((cat, idx) => (
               <button
                 key={cat}
-                className={`filterChipModern ${filterCategory === cat ? 'active' : ''}`}
+                className={`filterChipAnimated ${filterCategory === cat ? 'active' : ''}`}
                 onClick={() => setFilterCategory(cat)}
+                style={{ animationDelay: `${idx * 0.05}s` }}
               >
                 {cat === 'all' ? 'Все услуги' : cat}
               </button>
@@ -146,37 +146,42 @@ function Services() {
           </div>
         </div>
 
+        {/* Сетка услуг */}
         {loading ? (
-          <div className="loadingServicesModern">Загрузка услуг...</div>
+          <div className="loadingServicesAnimated">
+            <div className="loader"></div>
+            <p>Загрузка услуг...</p>
+          </div>
         ) : filteredServices.length === 0 ? (
-          <div className="noServicesFoundModern">
+          <div className="noServicesFoundAnimated">
             <h3>Ничего не найдено</h3>
             <p>Попробуйте изменить поисковый запрос</p>
-            <button className="resetFiltersBtnModern" onClick={() => { setSearchQuery(''); setFilterCategory('all'); }}>
+            <button className="resetFiltersBtnAnimated" onClick={() => { setSearchQuery(''); setFilterCategory('all'); }}>
               Сбросить фильтры
             </button>
           </div>
         ) : (
-          <div className="servicesGridModern">
+          <div className="servicesGridAnimated">
             {filteredServices.map((service, idx) => (
               <div 
                 key={service.id || idx} 
-                className="serviceCardModern" 
+                className="serviceCardAnimated" 
                 ref={el => cardsRef.current[idx] = el}
+                style={{ transitionDelay: `${idx * 0.05}s` }}
               >
-                <div className="serviceCardHeader">
-                  <h3 className="serviceNameModern">{service.name}</h3>
-                  <div className="servicePriceModern">{service.price}</div>
+                <div className="serviceCardHeaderAnimated">
+                  <h3 className="serviceNameAnimated">{service.name}</h3>
+                  <div className="servicePriceAnimated">{service.price}</div>
                 </div>
-                <div className="serviceDurationModern">
+                <div className="serviceDurationAnimated">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
                     <polyline points="12 6 12 12 16 14" stroke="currentColor" strokeWidth="2"/>
                   </svg>
                   {service.duration || '30 мин'}
                 </div>
-                <p className="serviceDescriptionModern">{service.description || 'Профессиональная помощь в нашей клинике'}</p>
-                <button className="bookServiceBtnModern" onClick={() => handleBookService(service)}>
+                <p className="serviceDescriptionAnimated">{service.description || 'Профессиональная помощь в нашей клинике'}</p>
+                <button className="bookServiceBtnAnimated" onClick={() => handleBookService(service)}>
                   Записаться
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2"/>
@@ -186,16 +191,6 @@ function Services() {
             ))}
           </div>
         )}
-
-        <div className="servicesCtaModern">
-          <div className="servicesCtaContentModern">
-            <h2>Не нашли нужную услугу?</h2>
-            <p>Свяжитесь с нами, и мы подберем индивидуальное решение</p>
-            <button className="servicesCtaBtnModern" onClick={() => window.location.href = '/contacts'}>
-              Связаться с нами
-            </button>
-          </div>
-        </div>
 
         {showModal && selectedService && (
           <BookingModal service={selectedService} onClose={() => setShowModal(false)} />
