@@ -190,6 +190,13 @@ select.inputField:hover {
   font-weight: 600;
 }
 
+.sectionTitle1 {
+  color: #f8f8f8;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
 .formGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

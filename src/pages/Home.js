@@ -168,7 +168,7 @@ function Home() {
         </div>
 
         <section className="featuresSection">
-          <h2 className="sectionTitle">Наши услуги</h2>
+          <h2 className="sectionTitle1">Наши услуги</h2>
           <div className="featuresGrid">
             {[
               { icon: '', title: 'Прием терапевта', desc: 'Осмотр, диагностика, лечение' },
@@ -187,22 +187,7 @@ function Home() {
           </div>
         </section>
 
-        <section className="infoSection">
-          <div className="infoGrid">
-            <div className="infoCard" ref={el => cardsRef.current[6] = el}>
-              <h3>Контакты</h3>
-              <p> 8 (911) 601-01-39</p>
-              <p> г. Старая Русса, мкр Городок 10а</p>
-              <p> Режим работы: по записи</p>
-            </div>
-            <div className="infoCard" ref={el => cardsRef.current[7] = el}>
-              <h3>О нас</h3>
-              <p> 5.0 на основе отзывов</p>
-              <p> 91 подписчик · 6 друзей</p>
-              <p>Ветеринарный кабинет «ВетСервис»</p>
-            </div>
-          </div>
-        </section>
+        
         
         <ReviewsSection />
       </div>
