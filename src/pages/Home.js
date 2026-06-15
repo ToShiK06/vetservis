@@ -42,7 +42,7 @@ function Home() {
       ],
       buttonText: 'Записаться на прием',
       buttonLink: '/contacts',
-      image: 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=1600&h=900&fit=crop'
+      image: '/images/cot.jpg'
     },
     {
       id: 2,
@@ -56,7 +56,7 @@ function Home() {
       ],
       buttonText: 'Узнать о вакцинации',
       buttonLink: '/services',
-      image: 'https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?w=1600&h=900&fit=crop'
+      image: '/images/enot.jpg'
     },
     {
       id: 3,
@@ -70,7 +70,7 @@ function Home() {
       ],
       buttonText: 'Записаться на консультацию',
       buttonLink: '/services',
-      image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=1600&h=900&fit=crop'
+      image: '/images/mops.jpg'
     },
     {
       id: 4,
@@ -84,7 +84,7 @@ function Home() {
       ],
       buttonText: 'Записаться на УЗИ',
       buttonLink: '/contacts',
-      image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&h=900&fit=crop'
+      image: '/images/cotspit.jpg'
     }
   ];
 
