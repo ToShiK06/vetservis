@@ -184,7 +184,7 @@ select.inputField:hover {
 }
 
 .sectionTitle {
-  color: #ffffff;
+  color: #1a3d63;
   font-size: 24px;
   margin-bottom: 20px;
   font-weight: 600;
@@ -6680,46 +6680,162 @@ body::before {
 }
 
 
-/* Адаптивные вкладки - перенос на новую строку */
-.adminTabs {
+/* Глобальные исправления для мобильных */
+@media (max-width: 768px) {
+  .adminContainer,
+  .clientDashboard {
+    padding: 15px;
+    margin-top: 80px;
+    overflow-x: hidden;
+  }
+  
+  .petsGrid,
+  .servicesGridModern {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+  
+  .petCard,
+  .dashboardPetCard,
+  .dashboardAppointmentCard {
+    margin: 0 0 15px 0;
+  }
+  
+  .formGrid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .formRow {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .requestsHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filterButtons {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 10px;
+  }
+  
+  .filterBtn {
+    white-space: nowrap;
+  }
+}
+
+/* Фильтры на мобильных */
+.filterContainerNew {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 10px;
-  margin-bottom: 30px;
-  border-bottom: 2px solid #B1C9EF;
-  padding-bottom: 10px;
-}
-
-.tabButton {
-  padding: 10px 24px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  color: #638ECB;
-  transition: all 0.3s;
-  border-radius: 8px;
-  white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-  .tabButton {
-    padding: 8px 16px;
-    font-size: 13px;
-  }
+  margin-bottom: 20px;
 }
 
 @media (max-width: 480px) {
-  .adminTabs {
+  .filterContainerNew {
     gap: 8px;
   }
   
-  .tabButton {
-    padding: 6px 12px;
+  .filterChipNew {
+    flex: 1;
+    min-width: calc(33.33% - 16px);
+    text-align: center;
+    padding: 8px 12px;
     font-size: 12px;
-    white-space: normal;
-    word-break: keep-all;
   }
 }
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Контейнеры не должны вылезать за пределы */
+.unifiedLoginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+.unifiedLoginCard {
+  background: white;
+  border-radius: 30px;
+  padding: 40px;
+  max-width: 450px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.unifiedLoginFooter {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.unifiedBackBtn {
+  background: none;
+  border: none;
+  color: #4A7FA7;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 15px;
+  transition: color 0.3s;
+  display: inline-block;
+}
+
+@media (max-width: 480px) {
+  .unifiedLoginCard {
+    padding: 25px;
+  }
+  
+  .unifiedLoginTitle {
+    font-size: 24px;
+  }
+  
+  .unifiedInput {
+    padding: 12px;
+  }
+}
+/* Login Required Card */
+.loginRequiredCard {
+  text-align: center;
+  padding: 40px;
+  background: #F6FAFD;
+  border-radius: 20px;
+}
+
+.loginRequiredCard p {
+  color: #1A3D63;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.loginRequiredBtn {
+  padding: 12px 30px;
+  background: #1A3D63;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.loginRequiredBtn:hover {
+  background: #4A7FA7;
+  transform: translateY(-2px);
+}
+

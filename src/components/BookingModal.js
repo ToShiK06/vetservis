@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { addDoc, appointmentsCollection, query, where, getDocs } from '../firebase';
 import { auth } from '../firebase';
 import emailjs from '@emailjs/browser';
+import { Link } from 'react-router-dom';
 
 const EMAILJS_SERVICE_ID = 'service_xg0uah9';      
 const EMAILJS_TEMPLATE_ID = 'template_3gpkrh1';    
@@ -25,6 +26,7 @@ function BookingModal({ service, onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [phoneError, setPhoneError] = useState('');
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const allTimeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -35,7 +37,6 @@ function BookingModal({ service, onClose }) {
 
   const petTypes = ['Собака', 'Кошка', 'Птица', 'Грызун', 'Рептилия', 'Другое'];
 
-  // Нормализация телефона
   const normalizePhone = (phone) => {
     if (!phone) return '';
     let cleaned = phone.replace(/[\s\(\)\-]/g, '');
@@ -53,7 +54,6 @@ function BookingModal({ service, onClose }) {
     return cleaned;
   };
 
-  // Форматирование телефона при вводе
   const formatPhone = (value) => {
     const numbers = value.replace(/\D/g, '');
     if (numbers.length === 0) return '';
@@ -64,7 +64,6 @@ function BookingModal({ service, onClose }) {
     return `+${numbers.slice(0, 1)} ${numbers.slice(1, 4)} ${numbers.slice(4, 7)} ${numbers.slice(7, 9)} ${numbers.slice(9, 11)}`;
   };
 
-  // Валидация телефона
   const validatePhone = (phone) => {
     if (!phone) return 'Поле обязательно для заполнения';
     const normalized = normalizePhone(phone);
@@ -74,15 +73,6 @@ function BookingModal({ service, onClose }) {
     }
     return '';
   };
-
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) {
-      alert('Для записи необходимо войти в аккаунт');
-      onClose();
-      window.location.href = '/login';
-    }
-  }, [onClose]);
 
   useEffect(() => {
     if (formData.bookingDate) {
@@ -161,10 +151,7 @@ function BookingModal({ service, onClose }) {
     
     const user = auth.currentUser;
     if (!user) {
-      setSubmitError('Необходимо войти в аккаунт для записи');
-      setTimeout(() => {
-        window.location.href = '/login';
-      }, 2000);
+      setShowLoginModal(true);
       return;
     }
     
@@ -233,89 +220,116 @@ function BookingModal({ service, onClose }) {
   };
 
   return (
-    <div className="modalOverlay" onClick={onClose}>
-      <div className="modalContent" onClick={(e) => e.stopPropagation()}>
-        <div className="modalHeader">
-          <h2>Запись на услугу</h2>
-          <button className="modalCloseBtn" onClick={onClose}>×</button>
+    <>
+      <div className="modalOverlay" onClick={onClose}>
+        <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+          <div className="modalHeader">
+            <h2>Запись на услугу</h2>
+            <button className="modalCloseBtn" onClick={onClose}>×</button>
+          </div>
+          
+          <div className="modalServiceInfo">
+            <span className="modalServiceIcon">{service.icon || ''}</span>
+            <div>
+              <h3>{service.name}</h3>
+              <p className="modalServicePrice">{service.price}</p>
+            </div>
+          </div>
+          
+          {submitError && <div className="errorMessageForm">{submitError}</div>}
+          
+          <form onSubmit={handleSubmit} className="modalForm">
+            <div className="formRow">
+              <div className="formGroup">
+                <label>Ваше имя *</label>
+                <input type="text" name="clientName" value={formData.clientName} onChange={handleChange} required />
+              </div>
+              <div className="formGroup">
+                <label>Телефон *</label>
+                <input 
+                  type="tel" 
+                  name="clientPhone" 
+                  value={formData.clientPhone} 
+                  onChange={handlePhoneChange} 
+                  className={phoneError ? 'inputError' : ''}
+                  required 
+                  placeholder="+7 999 123 45 67" 
+                />
+                {phoneError && <div className="errorText">{phoneError}</div>}
+                <div className="hintText">Введите 10 цифр после +7</div>
+              </div>
+            </div>
+            
+            <div className="formRow">
+              <div className="formGroup">
+                <label>Email</label>
+                <input type="email" name="clientEmail" value={formData.clientEmail} onChange={handleChange} />
+              </div>
+              <div className="formGroup">
+                <label>Вид питомца</label>
+                <select name="petType" value={formData.petType} onChange={handleChange}>
+                  <option value="">Выберите</option>
+                  {petTypes.map(type => <option key={type} value={type}>{type}</option>)}
+                </select>
+              </div>
+            </div>
+            
+            <div className="formRow">
+              <div className="formGroup">
+                <label>Дата *</label>
+                <input type="date" name="bookingDate" value={formData.bookingDate} onChange={handleChange} min={getMinDate()} max={getMaxDate()} required />
+              </div>
+              <div className="formGroup">
+                <label>Время *</label>
+                <select name="bookingTime" value={formData.bookingTime} onChange={handleChange} required disabled={!formData.bookingDate}>
+                  <option value="">Выберите время</option>
+                  {availableTimes.map(time => <option key={time} value={time}>{time}</option>)}
+                </select>
+              </div>
+            </div>
+            
+            <div className="formGroup">
+              <label>Кличка питомца</label>
+              <input type="text" name="petName" value={formData.petName} onChange={handleChange} />
+            </div>
+            
+            <div className="formGroup">
+              <label>Дополнительная информация</label>
+              <textarea name="message" value={formData.message} onChange={handleChange} rows="3" />
+            </div>
+            
+            <button type="submit" className="submitModalBtn" disabled={isSubmitting}>
+              {isSubmitting ? 'Бронирование...' : 'Подтвердить запись'}
+            </button>
+          </form>
         </div>
-        
-        <div className="modalServiceInfo">
-          <span className="modalServiceIcon">{service.icon || ''}</span>
-          <div>
-            <h3>{service.name}</h3>
-            <p className="modalServicePrice">{service.price}</p>
-          </div>
-        </div>
-        
-        {submitError && <div className="errorMessageForm">{submitError}</div>}
-        
-        <form onSubmit={handleSubmit} className="modalForm">
-          <div className="formRow">
-            <div className="formGroup">
-              <label>Ваше имя *</label>
-              <input type="text" name="clientName" value={formData.clientName} onChange={handleChange} required />
-            </div>
-            <div className="formGroup">
-              <label>Телефон *</label>
-              <input 
-                type="tel" 
-                name="clientPhone" 
-                value={formData.clientPhone} 
-                onChange={handlePhoneChange} 
-                className={phoneError ? 'inputError' : ''}
-                required 
-                placeholder="+7 999 123 45 67" 
-              />
-              {phoneError && <div className="errorText">{phoneError}</div>}
-              <div className="hintText">Введите 10 цифр после +7</div>
-            </div>
-          </div>
-          
-          <div className="formRow">
-            <div className="formGroup">
-              <label>Email</label>
-              <input type="email" name="clientEmail" value={formData.clientEmail} onChange={handleChange} />
-            </div>
-            <div className="formGroup">
-              <label>Вид питомца</label>
-              <select name="petType" value={formData.petType} onChange={handleChange}>
-                <option value="">Выберите</option>
-                {petTypes.map(type => <option key={type} value={type}>{type}</option>)}
-              </select>
-            </div>
-          </div>
-          
-          <div className="formRow">
-            <div className="formGroup">
-              <label>Дата *</label>
-              <input type="date" name="bookingDate" value={formData.bookingDate} onChange={handleChange} min={getMinDate()} max={getMaxDate()} required />
-            </div>
-            <div className="formGroup">
-              <label>Время *</label>
-              <select name="bookingTime" value={formData.bookingTime} onChange={handleChange} required disabled={!formData.bookingDate}>
-                <option value="">Выберите время</option>
-                {availableTimes.map(time => <option key={time} value={time}>{time}</option>)}
-              </select>
-            </div>
-          </div>
-          
-          <div className="formGroup">
-            <label>Кличка питомца</label>
-            <input type="text" name="petName" value={formData.petName} onChange={handleChange} />
-          </div>
-          
-          <div className="formGroup">
-            <label>Дополнительная информация</label>
-            <textarea name="message" value={formData.message} onChange={handleChange} rows="3" />
-          </div>
-          
-          <button type="submit" className="submitModalBtn" disabled={isSubmitting}>
-            {isSubmitting ? 'Бронирование...' : 'Подтвердить запись'}
-          </button>
-        </form>
       </div>
-    </div>
+
+      {/* Модальное окно с предложением войти */}
+      {showLoginModal && (
+        <div className="modalOverlay" onClick={() => setShowLoginModal(false)}>
+          <div className="modalContent" style={{ maxWidth: '400px', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modalHeader">
+              <h2>Требуется авторизация</h2>
+              <button className="modalCloseBtn" onClick={() => setShowLoginModal(false)}>×</button>
+            </div>
+            <div style={{ padding: '30px' }}>
+              <p style={{ marginBottom: '20px', color: '#1A3D63' }}>
+                Для записи на услугу необходимо войти в аккаунт.
+              </p>
+              <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+                <Link to="/login" className="submitButton" style={{ textDecoration: 'none' }} onClick={() => setShowLoginModal(false)}>
+                  Войти
+                </Link>
+                <button className="cancelButton" onClick={() => setShowLoginModal(false)}>
+                  Отмена
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

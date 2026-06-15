@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 import BookingForm from '../components/BookingForm';
 
 function Contacts() {
   const [isVisible, setIsVisible] = useState(false);
   const [infoVisible, setInfoVisible] = useState(false);
   const [mapVisible, setMapVisible] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
   const infoRef = useRef(null);
   const mapRef = useRef(null);
   const formRef = useRef(null);
-  const [formVisible, setFormVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -56,7 +57,10 @@ function Contacts() {
     <>
       <Helmet>
         <title>Контакты | ВетСервис - Ветеринарная клиника в Старой Руссе</title>
-        <meta name="description" content="Контакты ветеринарной клиники ВетСервис. Адрес: мкр Городок 10а. Телефон: 8 (911) 601-01-39." />
+        <meta name="description" content="Контакты ветеринарной клиники ВетСервис. Адрес: мкр Городок 10а. Телефон: 8 (911) 601-01-39. Режим работы и схема проезда. Запись на прием онлайн." />
+        <meta name="keywords" content="контакты ветклиники, ветеринарная клиника Старая Русса, телефон ветклиники, адрес, схема проезда" />
+        <meta property="og:title" content="Контакты ВетСервис - Ветеринарная клиника" />
+        <meta property="og:description" content="Как нас найти и связаться с нами. Адрес, телефон, режим работы." />
       </Helmet>
 
       <div className="contactsPageAnimated">
@@ -116,7 +120,11 @@ function Contacts() {
                 ></iframe>
                 <p className="mapAddressAnimated">Микрорайон Городок, 10А, г. Старая Русса</p>
                 <div className="mapLinksAnimated">
-                  <a href="https://yandex.ru/maps/?text=Старая+Русса+Городок+10а" target="_blank" rel="noopener noreferrer">
+                  <a 
+                    href="https://yandex.ru/maps/?text=Старая+Русса+Городок+10а" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
                     Построить маршрут
                   </a>
                 </div>
@@ -125,7 +133,7 @@ function Contacts() {
           </div>
         </div>
         
-        {/* Форма записи */}
+        {/* Форма записи - без автоматического редиректа */}
         <div ref={formRef} className={`contactsFormSectionAnimated ${formVisible ? 'visible' : ''}`}>
           <div className="contactsFormContainerAnimated">
             <div className="contactsFormHeaderAnimated">

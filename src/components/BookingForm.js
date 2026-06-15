@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { addDoc, appointmentsCollection, query, where, getDocs } from '../firebase';
 import { auth } from '../firebase';
+import { Link } from 'react-router-dom';
 
 function BookingForm() {
   const [formData, setFormData] = useState({
@@ -21,6 +22,7 @@ function BookingForm() {
   const [bookedTimes, setBookedTimes] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const serviceTypes = [
     'Прием терапевта',
@@ -42,17 +44,10 @@ function BookingForm() {
     '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'
   ];
 
-  // Проверка авторизации при загрузке компонента
   useEffect(() => {
     const user = auth.currentUser;
-    if (!user) {
-      setSubmitError('Для отправки заявки необходимо войти в аккаунт');
-      setTimeout(() => {
-        window.location.href = '/login';
-      }, 2000);
-    } else {
+    if (user) {
       setIsAuthenticated(true);
-      // Автоматически заполняем email и имя, если есть
       setFormData(prev => ({
         ...prev,
         clientEmail: user.email || '',
@@ -101,13 +96,9 @@ function BookingForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Проверка авторизации
     const user = auth.currentUser;
     if (!user) {
-      setSubmitError('Для отправки заявки необходимо войти в аккаунт');
-      setTimeout(() => {
-        window.location.href = '/login';
-      }, 2000);
+      setShowLoginModal(true);
       return;
     }
     
@@ -207,17 +198,38 @@ function BookingForm() {
             <h2 className="bookingFormTitle">Запись на прием</h2>
             <p className="bookingFormSubtitle">Выберите удобную дату и время</p>
           </div>
-          <div className="errorMessageForm">
-            Для записи на прием необходимо войти в аккаунт
+          <div className="loginRequiredCard">
+            <p>Для записи на прием необходимо войти в аккаунт</p>
+            <button className="loginRequiredBtn" onClick={() => setShowLoginModal(true)}>
+              Перейти к входу
+            </button>
           </div>
-          <button 
-            className="submitBookingButton" 
-            onClick={() => window.location.href = '/login'}
-            style={{ marginTop: '20px' }}
-          >
-            Перейти к входу
-          </button>
         </div>
+
+        {/* Модальное окно с предложением войти */}
+        {showLoginModal && (
+          <div className="modalOverlay" onClick={() => setShowLoginModal(false)}>
+            <div className="modalContent" style={{ maxWidth: '400px', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
+              <div className="modalHeader">
+                <h2>Требуется авторизация</h2>
+                <button className="modalCloseBtn" onClick={() => setShowLoginModal(false)}>×</button>
+              </div>
+              <div style={{ padding: '30px' }}>
+                <p style={{ marginBottom: '20px', color: '#1A3D63' }}>
+                  Для записи на прием необходимо войти в аккаунт.
+                </p>
+                <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+                  <Link to="/login" className="submitButton" style={{ textDecoration: 'none' }} onClick={() => setShowLoginModal(false)}>
+                    Войти
+                  </Link>
+                  <button className="cancelButton" onClick={() => setShowLoginModal(false)}>
+                    Отмена
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -225,10 +237,6 @@ function BookingForm() {
   return (
     <div className="bookingFormSection">
       <div className="bookingFormContainer">
-        <div className="bookingFormHeader">
-          <h2 className="bookingFormTitle">Запись на прием</h2>
-          <p className="bookingFormSubtitle">Выберите удобную дату и время</p>
-        </div>
         
         {submitSuccess && (
           <div className="successMessage">

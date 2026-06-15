@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { reviewsCollection, getDocs, addDoc, query, where } from '../firebase';
 import { auth } from '../firebase';
+import { Link } from 'react-router-dom';
 
 function ReviewsSection() {
   const [reviews, setReviews] = useState([]);
@@ -8,14 +9,13 @@ function ReviewsSection() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [user, setUser] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
     loadReviews();
-    // Проверяем авторизацию пользователя
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        // Если пользователь авторизован, предзаполняем имя из email
         setNewReview(prev => ({
           ...prev,
           name: currentUser.email ? currentUser.email.split('@')[0] : ''
@@ -42,10 +42,8 @@ function ReviewsSection() {
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     
-    // Проверка авторизации
     if (!user) {
-      alert('Для отправки отзыва необходимо войти в аккаунт');
-      window.location.href = '/login';
+      setShowLoginModal(true);
       return;
     }
     
@@ -81,67 +79,94 @@ function ReviewsSection() {
   }
 
   return (
-    <div className="reviewsSection">
-      <div className="reviewsHeader">
-        <h2>Отзывы наших клиентов</h2>
-        <p>Что говорят о нас</p>
+    <>
+      <div className="reviewsSection">
+        <div className="reviewsHeader">
+          <h2>Отзывы наших клиентов</h2>
+          <p>Что говорят о нас</p>
+        </div>
+        
+        <div className="reviewsGrid">
+          {reviews.length === 0 ? (
+            <div className="noReviewsMessage">Пока нет отзывов. Будьте первым!</div>
+          ) : (
+            reviews.slice(0, 6).map((review, idx) => (
+              <div key={idx} className="reviewCard">
+                <div className="reviewStars">{renderStars(review.rating)}</div>
+                <p className="reviewText">"{review.text}"</p>
+                <div className="reviewAuthor">
+                  <strong>{review.name}</strong>
+                  <span>{new Date(review.date).toLocaleDateString('ru-RU')}</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+        
+        <div className="reviewForm">
+          <h3>Оставить отзыв</h3>
+          {!user ? (
+            <div className="loginRequiredMessage">
+              <p>Для отправки отзыва необходимо войти в аккаунт</p>
+              <button className="loginRequiredBtn" onClick={() => setShowLoginModal(true)}>
+                Войти в аккаунт
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmitReview}>
+              <input
+                type="text"
+                placeholder="Ваше имя"
+                value={newReview.name}
+                onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+                required
+              />
+              <select
+                value={newReview.rating}
+                onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value) })}
+              >
+                {[5,4,3,2,1].map(r => <option key={r} value={r}>{r} звезд</option>)}
+              </select>
+              <textarea
+                placeholder="Ваш отзыв"
+                value={newReview.text}
+                onChange={(e) => setNewReview({ ...newReview, text: e.target.value })}
+                required
+                rows="3"
+              />
+              <button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Отправка...' : 'Оставить отзыв'}
+              </button>
+            </form>
+          )}
+        </div>
       </div>
-      
-      <div className="reviewsGrid">
-        {reviews.length === 0 ? (
-          <div className="noReviewsMessage">Пока нет отзывов. Будьте первым!</div>
-        ) : (
-          reviews.slice(0, 6).map((review, idx) => (
-            <div key={idx} className="reviewCard">
-              <div className="reviewStars">{renderStars(review.rating)}</div>
-              <p className="reviewText">"{review.text}"</p>
-              <div className="reviewAuthor">
-                <strong>{review.name}</strong>
-                <span>{new Date(review.date).toLocaleDateString('ru-RU')}</span>
+
+      {/* Модальное окно с предложением войти */}
+      {showLoginModal && (
+        <div className="modalOverlay" onClick={() => setShowLoginModal(false)}>
+          <div className="modalContent" style={{ maxWidth: '400px', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modalHeader">
+              <h2>Требуется авторизация</h2>
+              <button className="modalCloseBtn" onClick={() => setShowLoginModal(false)}>×</button>
+            </div>
+            <div style={{ padding: '30px' }}>
+              <p style={{ marginBottom: '20px', color: '#1A3D63' }}>
+                Для отправки отзыва необходимо войти в аккаунт.
+              </p>
+              <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+                <Link to="/login" className="submitButton" style={{ textDecoration: 'none' }} onClick={() => setShowLoginModal(false)}>
+                  Войти
+                </Link>
+                <button className="cancelButton" onClick={() => setShowLoginModal(false)}>
+                  Отмена
+                </button>
               </div>
             </div>
-          ))
-        )}
-      </div>
-      
-      <div className="reviewForm">
-        <h3>Оставить отзыв</h3>
-        {!user ? (
-          <div className="loginRequiredMessage">
-            <p>Для отправки отзыва необходимо войти в аккаунт</p>
-            <button className="loginRequiredBtn" onClick={() => window.location.href = '/login'}>
-              Войти в аккаунт
-            </button>
           </div>
-        ) : (
-          <form onSubmit={handleSubmitReview}>
-            <input
-              type="text"
-              placeholder="Ваше имя"
-              value={newReview.name}
-              onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-              required
-            />
-            <select
-              value={newReview.rating}
-              onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value) })}
-            >
-              {[5,4,3,2,1].map(r => <option key={r} value={r}>{r} звезд</option>)}
-            </select>
-            <textarea
-              placeholder="Ваш отзыв"
-              value={newReview.text}
-              onChange={(e) => setNewReview({ ...newReview, text: e.target.value })}
-              required
-              rows="3"
-            />
-            <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Отправка...' : 'Оставить отзыв'}
-            </button>
-          </form>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 }
 
