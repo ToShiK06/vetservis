@@ -1426,7 +1426,7 @@ select.inputField:hover {
 
 .luxuryFooterBottomContent {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 15px;
@@ -6648,5 +6648,106 @@ body::before {
   
   .contactsFormHeaderAnimated h2 {
     font-size: 24px;
+  }
+}
+
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-eye {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.password-eye:hover svg {
+  stroke: #4A7FA7;
+}
+
+
+/* Адаптивные вкладки для админ-панели */
+.adminTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #B1C9EF;
+  padding-bottom: 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabButton {
+  padding: 10px 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #638ECB;
+  transition: all 0.3s;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tabButton:hover {
+  color: #395886;
+}
+
+.tabButton.active {
+  background-color: #395886;
+  color: white;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+  .adminTabs {
+    gap: 8px;
+    padding-bottom: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  
+  .tabButton {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  /* Скрываем скроллбар но оставляем возможность скролла */
+  .adminTabs::-webkit-scrollbar {
+    height: 3px;
+  }
+  
+  .adminTabs::-webkit-scrollbar-track {
+    background: #B1C9EF;
+    border-radius: 3px;
+  }
+  
+  .adminTabs::-webkit-scrollbar-thumb {
+    background: #638ECB;
+    border-radius: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabButton {
+    padding: 6px 12px;
+    font-size: 12px;
   }
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { auth, signInWithEmailAndPassword, db, doc, getDoc } from '../firebase';
+import PasswordInput from './PasswordInput';
 
 function UnifiedLogin({ setAdmin }) {
   const [email, setEmail] = useState('');
@@ -19,12 +20,10 @@ function UnifiedLogin({ setAdmin }) {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       
-      // Проверяем, админ ли это
       if (user.email === 'admin@vetmaster.com') {
         setAdmin(user);
         navigate('/admin');
       } else {
-        // Проверяем, существует ли пользователь в коллекции users
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
           navigate('/dashboard');
@@ -84,13 +83,12 @@ function UnifiedLogin({ setAdmin }) {
 
             <div className="unifiedInputGroup">
               <label className="unifiedInputLabel">Пароль</label>
-              <input
-                type="password"
-                className="unifiedInput"
+              <PasswordInput
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
                 placeholder="••••••••"
+                className="unifiedInput"
+                required
               />
             </div>
 

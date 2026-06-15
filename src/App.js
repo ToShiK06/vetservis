@@ -14,7 +14,6 @@ import ClientDashboard from './pages/ClientDashboard';
 import ClientRegister from './components/ClientRegister';
 import UnifiedLogin from './components/UnifiedLogin';
 
-// Компонент для отслеживания скролла
 function ScrollProgress() {
   const [scrollWidth, setScrollWidth] = useState(0);
 
@@ -33,7 +32,6 @@ function ScrollProgress() {
   return <div className="scrollProgress" style={{ width: `${scrollWidth}%` }}></div>;
 }
 
-// Компонент для анимации страниц
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -47,7 +45,6 @@ function ScrollToTop() {
   return null;
 }
 
-// Компонент для защиты маршрута клиента
 function PrivateClientRoute({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -68,7 +65,6 @@ function PrivateClientRoute({ children }) {
     return <Navigate to="/login" replace />;
   }
 
-  // Если пользователь админ, перенаправляем в админку
   if (user.email === 'admin@vetmaster.com') {
     return <Navigate to="/admin" replace />;
   }

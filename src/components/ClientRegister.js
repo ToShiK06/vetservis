@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, db, doc, setDoc } from '../firebase';
 import { useNavigate } from 'react-router-dom';
+import PasswordInput from './PasswordInput';
 
 function ClientRegister() {
   const [isLogin, setIsLogin] = useState(true);
@@ -78,7 +79,6 @@ function ClientRegister() {
         await signInWithEmailAndPassword(auth, email, password);
         navigate('/dashboard');
       } else {
-        // Проверка телефона при регистрации
         const phoneValid = !validatePhone(phone);
         if (!phoneValid) {
           setError('Пожалуйста, введите корректный номер телефона');
@@ -90,7 +90,7 @@ function ClientRegister() {
         await setDoc(doc(db, 'users', userCredential.user.uid), {
           name: name,
           email: email,
-          phone: normalizePhone(phone), // Сохраняем в нормализованном формате
+          phone: normalizePhone(phone),
           role: 'client',
           createdAt: new Date().toISOString()
         });
@@ -128,9 +128,8 @@ function ClientRegister() {
   return (
     <>
       <Helmet>
-        <title>{isLogin ? 'Вход в личный кабинет' : 'Регистрация'} | ВетСервис</title>
+        <title>Вход для клиентов | ВетСервис</title>
         <meta name="robots" content="noindex, nofollow" />
-        <meta name="description" content="Страница входа и регистрации в личном кабинете ветеринарной клиники ВетСервис. Только для зарегистрированных клиентов." />
       </Helmet>
 
       <div className="clientRegisterOverlay">
@@ -173,11 +172,11 @@ function ClientRegister() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <input
-                type="password"
-                placeholder="Пароль (минимум 6 символов) *"
+              <PasswordInput
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Пароль (минимум 6 символов) *"
+                className="formInput"
                 required
               />
               {error && <div className="errorMessageForm">{error}</div>}

@@ -1,0 +1,15 @@
+meta:
+  environment: node
+  toolchain:
+    name: npm
+    version: "18"
+build:
+  artifacts:
+    - /build
+  commands:
+    - npm ci --production=false
+    - npm run build
+run:
+  command: npx serve -s build -l ${PORT:-80}
+  port: 80
+  persistenceMount: /data

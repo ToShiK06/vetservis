@@ -24,6 +24,7 @@ function BookingModal({ service, onClose }) {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
 
   const allTimeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -34,7 +35,46 @@ function BookingModal({ service, onClose }) {
 
   const petTypes = ['Собака', 'Кошка', 'Птица', 'Грызун', 'Рептилия', 'Другое'];
 
-  // Проверка авторизации при открытии модального окна
+  // Нормализация телефона
+  const normalizePhone = (phone) => {
+    if (!phone) return '';
+    let cleaned = phone.replace(/[\s\(\)\-]/g, '');
+    cleaned = cleaned.replace('+', '');
+    
+    if (cleaned.startsWith('8')) {
+      cleaned = '+7' + cleaned.slice(1);
+    } else if (cleaned.startsWith('7')) {
+      cleaned = '+' + cleaned;
+    } else if (cleaned.startsWith('9')) {
+      cleaned = '+7' + cleaned;
+    } else if (!cleaned.startsWith('+')) {
+      cleaned = '+' + cleaned;
+    }
+    return cleaned;
+  };
+
+  // Форматирование телефона при вводе
+  const formatPhone = (value) => {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length === 0) return '';
+    if (numbers.length <= 1) return `+${numbers}`;
+    if (numbers.length <= 4) return `+${numbers.slice(0, 1)} ${numbers.slice(1)}`;
+    if (numbers.length <= 7) return `+${numbers.slice(0, 1)} ${numbers.slice(1, 4)} ${numbers.slice(4)}`;
+    if (numbers.length <= 9) return `+${numbers.slice(0, 1)} ${numbers.slice(1, 4)} ${numbers.slice(4, 7)} ${numbers.slice(7)}`;
+    return `+${numbers.slice(0, 1)} ${numbers.slice(1, 4)} ${numbers.slice(4, 7)} ${numbers.slice(7, 9)} ${numbers.slice(9, 11)}`;
+  };
+
+  // Валидация телефона
+  const validatePhone = (phone) => {
+    if (!phone) return 'Поле обязательно для заполнения';
+    const normalized = normalizePhone(phone);
+    const phoneRegex = /^\+\d{1,3}\d{10}$/;
+    if (!phoneRegex.test(normalized)) {
+      return 'Введите корректный номер телефона (10 цифр после кода страны)';
+    }
+    return '';
+  };
+
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) {
@@ -75,10 +115,15 @@ function BookingModal({ service, onClose }) {
     });
   };
 
-  const validatePhone = (phone) => {
-    const cleanPhone = phone.replace(/[\s\(\)\-]/g, '');
-    const phoneRegex = /^(\+7|7|8)?\d{10}$/;
-    return phoneRegex.test(cleanPhone);
+  const handlePhoneChange = (e) => {
+    const rawValue = e.target.value;
+    const formattedValue = formatPhone(rawValue);
+    const error = validatePhone(formattedValue);
+    setPhoneError(error);
+    setFormData({
+      ...formData,
+      clientPhone: formattedValue
+    });
   };
 
   const sendEmailToAdmin = async () => {
@@ -114,7 +159,6 @@ function BookingModal({ service, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Дополнительная проверка авторизации перед отправкой
     const user = auth.currentUser;
     if (!user) {
       setSubmitError('Необходимо войти в аккаунт для записи');
@@ -128,10 +172,14 @@ function BookingModal({ service, onClose }) {
       setSubmitError('Введите ваше имя');
       return;
     }
-    if (!formData.clientPhone || !validatePhone(formData.clientPhone)) {
-      setSubmitError('Введите корректный номер телефона');
+    
+    const phoneValid = validatePhone(formData.clientPhone);
+    if (phoneValid) {
+      setPhoneError(phoneValid);
+      setSubmitError(phoneValid);
       return;
     }
+    
     if (!formData.bookingDate) {
       setSubmitError('Выберите дату');
       return;
@@ -151,6 +199,7 @@ function BookingModal({ service, onClose }) {
     try {
       await addDoc(appointmentsCollection, {
         ...formData,
+        clientPhone: normalizePhone(formData.clientPhone),
         serviceName: service.name,
         servicePrice: service.price,
         status: 'confirmed',
@@ -209,7 +258,17 @@ function BookingModal({ service, onClose }) {
             </div>
             <div className="formGroup">
               <label>Телефон *</label>
-              <input type="tel" name="clientPhone" value={formData.clientPhone} onChange={handleChange} required placeholder="+7 999 123 45 67" />
+              <input 
+                type="tel" 
+                name="clientPhone" 
+                value={formData.clientPhone} 
+                onChange={handlePhoneChange} 
+                className={phoneError ? 'inputError' : ''}
+                required 
+                placeholder="+7 999 123 45 67" 
+              />
+              {phoneError && <div className="errorText">{phoneError}</div>}
+              <div className="hintText">Введите 10 цифр после +7</div>
             </div>
           </div>
           
