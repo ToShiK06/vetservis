@@ -42,7 +42,7 @@ function Home() {
       ],
       buttonText: 'Записаться на прием',
       buttonLink: '/contacts',
-      image: '/images/cot.jpg'
+      image: '/src/pages/images/cot.jpg'
     },
     {
       id: 2,
@@ -56,7 +56,7 @@ function Home() {
       ],
       buttonText: 'Узнать о вакцинации',
       buttonLink: '/services',
-      image: '/images/enot.jpg'
+      image: '/src/pages/images/enot.jpg'
     },
     {
       id: 3,
@@ -70,7 +70,7 @@ function Home() {
       ],
       buttonText: 'Записаться на консультацию',
       buttonLink: '/services',
-      image: '/images/mops.jpg'
+      image: '/src/pages/images/mops.jpg'
     },
     {
       id: 4,
@@ -84,7 +84,7 @@ function Home() {
       ],
       buttonText: 'Записаться на УЗИ',
       buttonLink: '/contacts',
-      image: '/images/cotspit.jpg'
+      image: '/src/pages/images/cotspit.jpg'
     }
   ];
 
