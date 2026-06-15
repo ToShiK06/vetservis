@@ -84,7 +84,7 @@ function Home() {
       ],
       buttonText: 'Записаться на УЗИ',
       buttonLink: '/contacts',
-      image: '/images/cot.jpg'
+      image: '/images/cotspit.jpg'
     }
   ];
 
